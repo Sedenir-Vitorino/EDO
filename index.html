@@ -1,0 +1,2411 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Guia Completo de EDO </title>
+
+    <!-- Configuração e inclusão do MathJax para renderizar LaTeX -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --light-gray: #f5f6fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--light-gray);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 30px;
+        }
+
+        /* Sidebar de Navegação */
+        .sidebar {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 20px;
+        }
+
+        .sidebar nav ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .sidebar nav ul li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar nav a {
+            display: block;
+            padding: 5px 10px;
+            color: var(--primary-color);
+            text-decoration: none;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar nav a:hover {
+            border-left-color: var(--secondary-color);
+            background: #f8f9fa;
+        }
+
+        .sidebar nav ul ul {
+            margin-left: 15px;
+        }
+
+        /* Conteúdo Principal */
+        .main-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        .method-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .step-by-step {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 6px;
+        }
+
+        p {
+            background: #ecf0f1;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        pre {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+
+        /* Botão de impressão */
+        .print-button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .print-button:hover {
+            background-color: #2a80b9;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.9em;
+            color: #777;
+            margin-top: 20px;
+        }
+    </style>
+    <script>
+        function imprimirPagina() {
+            window.print();
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sidebar de Navegação -->
+        <div class="sidebar">
+            <h2>Sumário</h2>
+            <nav>
+                <ul>
+                    <li>
+                        <a href="#intro">1. Introdução às EDOs</a>
+                        <ul>
+                            <li><a href="#intro-1-1">1.1 Considerações sobre Taxa de Variação</a></li>
+                            <li><a href="#intro-1-2">1.2 Conceitos Fundamentais em EDOs</a></li>
+                            <li><a href="#intro-1-3">1.3 Solução para uma Equação Diferencial</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#first-order">2. EDOs de Primeira Ordem</a>
+                        <ul>
+                            <li><a href="#first-order-2-1">2.1 Algumas Aplicações Envolvendo EDOs</a></li>
+                            <li><a href="#first-order-2-2">2.2 EDOs Separáveis</a></li>
+                            <li><a href="#first-order-2-3">2.3 Método dos Fatores Integrantes</a></li>
+                            <li><a href="#first-order-2-4">2.4 Método de Resolução para EDOs Homogêneas</a></li>
+                            <li><a href="#first-order-2-5">2.5 Método de Resolução para EDOs Exatas</a></li>
+                            <li><a href="#first-order-2-6">2.6 Fatores Integrantes para Transformar EDOs Não Exatas em
+                                    Exatas</a></li>
+                            <li><a href="#first-order-2-7">2.7 Equação de Bernoulli</a></li>
+                            <li><a href="#first-order-2-8">2.8 Aplicações - EDOs de Primeira Ordem</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#second-order">3. EDOs de Segunda Ordem ou Superior</a>
+                        <ul>
+                            <li><a href="#second-order-3-1">3.1 Teoria Preliminar</a></li>
+                            <li><a href="#second-order-3-2">3.2 Método da Redução da Ordem</a></li>
+                            <li>
+                                <a href="#second-order-3-3">3.3 Equações Lineares Homogêneas com Coeficientes
+                                    Constantes</a>
+                                <ul>
+                                    <li><a href="#second-order-3-3-1">3.3.1 EDO de Segunda Ordem</a></li>
+                                    <li><a href="#second-order-3-3-2">3.3.2 EDO de Ordem Superior</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#second-order-3-4">3.4 EDOs Não Homogêneas – Coeficientes Indeterminados –
+                                    Superposição</a>
+                                <ul>
+                                    <li><a href="#second-order-3-4-1">3.4.1 Tipos de Soluções</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#second-order-3-5">3.5 Variação dos Parâmetros</a></li>
+                            <li><a href="#second-order-3-6">3.6 Equação de Cauchy-Euler</a></li>
+                            <li>
+                                <a href="#second-order-3-7">3.7 Resolução por Operadores Anuladores</a>
+                                <ul>
+                                    <li><a href="#second-order-3-7-1">3.7.1 Operadores Diferenciais</a></li>
+                                    <li><a href="#second-order-3-7-2">3.7.2 Operadores Anuladores</a></li>
+                                    <li><a href="#second-order-3-7-3">3.7.3 Resolução por Anuladores</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#systems">4. Sistemas de Equações Diferenciais Ordinárias</a>
+                        <ul>
+                            <li><a href="#systems-4-1">4.1 Resolução pelo Método dos Operadores</a></li>
+                            <li>
+                                <a href="#systems-4-2">4.2 Resolução por Álgebra de Matrizes</a>
+                                <ul>
+                                    <li><a href="#systems-4-2-1">4.2.1 Teoria Preliminar</a></li>
+                                    <li><a href="#systems-4-2-2">4.2.2 Vetor Solução de um Sistema</a></li>
+                                    <li><a href="#systems-4-2-3">4.2.3 Sistemas Homogêneos com Coeficientes
+                                            Constantes</a></li>
+                                    <li><a href="#systems-4-2-4">4.2.4 Autovalores e Autovetores</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="game.html">5. Simulado</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Conteúdo Principal -->
+        <div class="main-content">
+            <h1>Guia Completo de Equações Diferenciais Ordinárias</h1>
+
+            <!-- Seção 1: Introdução às EDOs -->
+            <section id="intro">
+                <h2>1. Introdução às EDOs</h2>
+
+                <!-- 1.1 -->
+                <div class="method-card" id="intro-1-1">
+                    <h3>1.1 Considerações sobre Taxa de Variação</h3>
+                    <div class="step-by-step">
+                        <p>Em EDOs, a <strong>taxa de variação</strong> representa como uma determinada quantidade muda
+                            em relação a uma outra (por exemplo, tempo ou posição). Essa variação é expressa por meio
+                            das derivadas.</p>
+                        <p><strong>Exemplo:</strong> Na equação do crescimento populacional \( \frac{dP}{dt} = kP \), a
+                            taxa de variação da população \(P\) é proporcional a \(P\) mesma.</p>
+                    </div>
+                </div>
+
+                <!-- 1.2 -->
+                <div class="method-card" id="intro-1-2">
+                    <h3>1.2 Conceitos Fundamentais em EDOs</h3>
+                    <div class="step-by-step">
+                        <p>Uma Equação Diferencial Ordinária envolve uma função desconhecida e suas derivadas em relação
+                            a uma única variável. Os principais conceitos são:</p>
+                        <ul>
+                            <li><strong>Ordem:</strong> a derivada de maior ordem presente.</li>
+                            <li><strong>Grau:</strong> o expoente da derivada de maior ordem (em EDOs lineares,
+                                geralmente é 1).</li>
+                            <li><strong>Linearidade:</strong> quando a função e suas derivadas aparecem apenas na
+                                primeira potência.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 1.3 -->
+                <div class="method-card" id="intro-1-3">
+                    <h3>1.3 Solução para uma Equação Diferencial</h3>
+                    <div class="step-by-step">
+                        <p>Resolver uma EDO significa encontrar uma função que satisfaça a equação. Dependendo do tipo
+                            de EDO, métodos como separação de variáveis, fator integrante, variação de parâmetros, entre
+                            outros, podem ser empregados.</p>
+                        <p><strong>Exemplo:</strong> A solução da equação \( \frac{dP}{dt} = kP \) é \( P(t) = P_0e^{kt}
+                            \).</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção 2: EDOs de Primeira Ordem -->
+            <section id="first-order">
+                <h2>2. EDOs de Primeira Ordem</h2>
+
+                <!-- 2.1 -->
+                <div class="method-card" id="first-order-2-1">
+                    <h3>2.1 Algumas Aplicações Envolvendo EDOs</h3>
+                    <div class="step-by-step">
+                        <p>As EDOs de primeira ordem são amplamente utilizadas em modelos que descrevem fenômenos
+                            naturais e processos práticos, como o crescimento populacional, o decaimento radioativo e
+                            circuitos elétricos simples.</p>
+                        <p><strong>Exemplo:</strong> O modelo de Malthus para o crescimento populacional utiliza \(
+                            \frac{dP}{dt} = kP \), que resulta em uma solução exponencial.</p>
+                    </div>
+                </div>
+
+                <!-- 2.2 -->
+                <div class="method-card" id="first-order-2-2">
+                    <h3>2.2 EDOs Separáveis</h3>
+                    <div class="step-by-step">
+                        <p>As equações diferenciais separáveis têm a propriedade de que as variáveis podem ser
+                            separadas, isto é, os termos envolvendo \( y \) (ou a função dependente) ficam de um lado da
+                            equação, e os termos envolvendo \( x \) (ou a variável independente) ficam do outro lado.
+                            Isso permite que a equação seja resolvida através de integração.</p>
+
+                        <p><strong>Forma Geral:</strong> Uma equação diferencial separável pode ser escrita como:</p>
+                        <p>
+                            \[
+                            \frac{dy}{dx} = g(x) \cdot h(y)
+                            \]
+                        </p>
+                        <p>Onde \( g(x) \) é uma função de \( x \) e \( h(y) \) é uma função de \( y \).</p>
+
+                        <p><strong>Passo a Passo para Resolver uma EDO Separável:</strong></p>
+                        <ol>
+                            <li><strong>Passo 1:</strong> Reescreva a equação de forma que todas as expressões
+                                envolvendo \( y \) (ou a função dependente) fiquem de um lado da equação e todas as
+                                expressões envolvendo \( x \) fiquem do outro lado.</li>
+                            <p>Exemplo: Considere a equação diferencial \( \frac{dy}{dx} = \frac{x}{y} \).</p>
+                            <p>A equação pode ser reescrita como:</p>
+                            <p>\[
+                                y \, dy = x \, dx
+                                \]</p>
+
+                            <li><strong>Passo 2:</strong> Integre ambos os lados da equação separada em relação às suas
+                                respectivas variáveis.</li>
+                            <p>Integrando ambos os lados:</p>
+                            <p>\[
+                                \int y \, dy = \int x \, dx
+                                \]</p>
+                            <p>Ou seja, obtemos:</p>
+                            <p>\[
+                                \frac{y^2}{2} = \frac{x^2}{2} + C
+                                \]</p>
+                            <p>Onde \( C \) é a constante de integração.</p>
+
+                            <li><strong>Passo 3:</strong> Se necessário, resolva a equação para a função dependente (no
+                                caso, \( y \)).</li>
+                            <p>Para o exemplo, isolando \( y \), temos:</p>
+                            <p>\[
+                                y^2 = x^2 + 2C
+                                \]</p>
+                            <p>E, finalmente:</p>
+                            <p>\[
+                                y = \pm \sqrt{x^2 + 2C}
+                                \]</p>
+                        </ol>
+
+                        <p><strong>Exemplo Adicional:</strong> A equação \( \frac{dy}{dx} = \frac{y}{x} \) pode ser
+                            reescrita como:</p>
+                        <p>\[
+                            \frac{dy}{y} = \frac{dx}{x}
+                            \]</p>
+                        <p>Agora, integramos ambos os lados:</p>
+                        <p>\[
+                            \int \frac{1}{y} \, dy = \int \frac{1}{x} \, dx
+                            \]</p>
+                        <p>Resultando em:</p>
+                        <p>\[
+                            \ln|y| = \ln|x| + C
+                            \]</p>
+                        <p>Ou seja, a solução geral é:</p>
+                        <p>\[
+                            y = A \cdot x
+                            \]</p>
+                        <p>Onde \( A = e^C \) é uma nova constante.</p>
+                    </div>
+                </div>
+
+
+                <!-- 2.3 -->
+                <div class="method-card" id="first-order-2-3">
+                    <h3>2.3 Método dos Fatores Integrantes</h3>
+                    <div class="step-by-step">
+                        <p>O método dos fatores integrantes é utilizado para resolver equações diferenciais lineares de
+                            primeira ordem, da forma:</p>
+                        <p>
+                            \[
+                            y' + p(x) \cdot y = q(x)
+                            \]
+                        </p>
+                        <p>Esse método envolve o cálculo de um fator integrante, \( \mu(x) \), que permite transformar a
+                            equação em uma forma mais fácil de ser resolvida.</p>
+
+                        <p><strong>Fator Integrante:</strong> O fator integrante é dado por:</p>
+                        <p>
+                            \[
+                            \mu(x) = e^{\int p(x) \, dx}
+                            \]
+                        </p>
+                        <p>Multiplicando a equação original por \( \mu(x) \), conseguimos reescrever o lado esquerdo da
+                            equação como a derivada de um produto.</p>
+
+                        <p><strong>Passo a Passo para Resolver com o Método dos Fatores Integrantes:</strong></p>
+                        <ol>
+                            <li><strong>Passo 1:</strong> Identifique \( p(x) \) e \( q(x) \) na equação diferencial.
+                            </li>
+                            <p>Considerando a equação exemplo \( y' + 2xy = x \), temos:</p>
+                            <p>\[
+                                p(x) = 2x \quad \text{e} \quad q(x) = x
+                                \]</p>
+
+                            <li><strong>Passo 2:</strong> Calcule o fator integrante \( \mu(x) \) utilizando \( p(x) \).
+                            </li>
+                            <p>O fator integrante é dado por:</p>
+                            <p>\[
+                                \mu(x) = e^{\int 2x \, dx} = e^{x^2}
+                                \]</p>
+
+                            <li><strong>Passo 3:</strong> Multiplique toda a equação original por \( \mu(x) \) para
+                                transformar o lado esquerdo em uma derivada de um produto.</li>
+                            <p>Multiplicando a equação original \( y' + 2xy = x \) por \( \mu(x) = e^{x^2} \), obtemos:
+                            </p>
+                            <p>\[
+                                e^{x^2} y' + e^{x^2} \cdot 2xy = e^{x^2} \cdot x
+                                \]</p>
+                            <p>Isso pode ser reescrito como:</p>
+                            <p>\[
+                                \frac{d}{dx}(e^{x^2} y) = x e^{x^2}
+                                \]</p>
+
+                            <li><strong>Passo 4:</strong> Integre ambos os lados em relação a \( x \).</li>
+                            <p>Agora que o lado esquerdo é a derivada de um produto, podemos integrar ambos os lados da
+                                equação:</p>
+                            <p>\[
+                                \int \frac{d}{dx}(e^{x^2} y) \, dx = \int x e^{x^2} \, dx
+                                \]</p>
+                            <p>A integral do lado esquerdo é simplesmente \( e^{x^2} y \), e a integral do lado direito
+                                pode ser resolvida com substituição.</p>
+
+                            <li><strong>Passo 5:</strong> Resolva a integral do lado direito e obtenha a solução geral.
+                            </li>
+                            <p>A integral do lado direito pode ser resolvida com a substituição \( u = x^2 \), \( du =
+                                2x \, dx \), resultando em:</p>
+                            <p>\[
+                                \int x e^{x^2} \, dx = \frac{1}{2} e^{x^2} + C
+                                \]</p>
+                            <p>Assim, obtemos:</p>
+                            <p>\[
+                                e^{x^2} y = \frac{1}{2} e^{x^2} + C
+                                \]</p>
+
+                            <li><strong>Passo 6:</strong> Resolva para \( y \).</li>
+                            <p>Finalmente, isolando \( y \), temos:</p>
+                            <p>\[
+                                y = \frac{1}{2} + C e^{-x^2}
+                                \]</p>
+                        </ol>
+
+                        <p><strong>Exemplo Adicional:</strong> Para a equação \( y' + 3y = 6x \), o fator integrante
+                            seria \( \mu(x) = e^{\int 3 \, dx} = e^{3x} \), e a equação transformada seria:</p>
+                        <p>\[
+                            \frac{d}{dx}(e^{3x} y) = 6x e^{3x}
+                            \]</p>
+                        <p>Esse procedimento segue os mesmos passos descritos para a solução completa.</p>
+                    </div>
+                </div>
+
+                <!-- 2.4 -->
+                <div class="method-card" id="first-order-2-4">
+                    <h3>2.4 Método de Resolução para EDOs Homogêneas</h3>
+                    <div class="step-by-step">
+                        <p>Uma EDO é considerada homogênea quando as funções que a compõem possuem o mesmo grau de
+                            homogeneidade. Em outras palavras, se substituirmos \( x \) por \( tx \) e \( y \) por \( ty
+                            \), a equação mantém a mesma forma multiplicada por uma potência de \( t \).</p>
+
+                        <p><strong>Passo a Passo:</strong></p>
+                        <ol>
+                            <li>
+                                <strong>Verifique a Homogeneidade:</strong>
+                                <p>Uma equação na forma \( M(x,y)dx + N(x,y)dy = 0 \) é homogênea se, para qualquer \( t
+                                    \), temos:</p>
+                                <p>\( M(tx,ty) = t^n M(x,y) \) e \( N(tx,ty) = t^n N(x,y) \) para algum \( n \).</p>
+                            </li>
+                            <li>
+                                <strong>Substitua \( y \) por \( ux \):</strong>
+                                <p>Defina \( y = ux \) (onde \( u \) é uma nova função de \( x \)). Assim, a derivada de
+                                    \( y \) em relação a \( x \) será:</p>
+                                <p>\( dy = u\,dx + x\,du \).</p>
+                            </li>
+                            <li>
+                                <strong>Substitua na Equação:</strong>
+                                <p>Substitua \( y = ux \) e \( dy = u\,dx + x\,du \) em toda a equação para que ela
+                                    fique em termos de \( x \) e \( u \).</p>
+                            </li>
+                            <li>
+                                <strong>Separe as Variáveis:</strong>
+                                <p>Após a substituição, reorganize a equação para isolar os termos envolvendo \( u \) e
+                                    \( du \) de um lado e os termos envolvendo \( x \) e \( dx \) do outro.</p>
+                            </li>
+                            <li>
+                                <strong>Integre:</strong>
+                                <p>Realize a integração de ambos os lados da equação obtida no passo anterior.</p>
+                            </li>
+                            <li>
+                                <strong>Retorne à Variável Original:</strong>
+                                <p>Após encontrar \( u \) em função de \( x \), substitua \( u = \frac{y}{x} \) para
+                                    obter a solução em termos de \( y \) e \( x \).</p>
+                            </li>
+                        </ol>
+
+                        <p><strong>Exemplo:</strong> Considere a equação:</p>
+                        <p>\( (x^2+y^2)dx + xy\,dy = 0 \)</p>
+                        <ol>
+                            <li>
+                                <strong>Verificação de Homogeneidade:</strong>
+                                <p>Observe que:</p>
+                                <p>\( x^2+y^2 \) é homogêneo de grau 2, pois \( (tx)^2+(ty)^2 = t^2(x^2+y^2) \).</p>
+                                <p>\( xy \) também é homogêneo de grau 2, pois \( (tx)(ty)=t^2xy \).</p>
+                            </li>
+                            <li>
+                                <strong>Substituição:</strong>
+                                <p>Defina \( y = ux \), logo \( dy = u\,dx + x\,du \).</p>
+                            </li>
+                            <li>
+                                <strong>Substituição na Equação:</strong>
+                                <p>Substituindo, temos:</p>
+                                <p>\( \left(x^2 + (ux)^2\right)dx + x(ux)\left(u\,dx + x\,du\right)=0 \)</p>
+                                <p>O que resulta em:</p>
+                                <p>\( \left(x^2 + u^2x^2\right)dx + u x^2 \left(u\,dx + x\,du\right)=0 \)</p>
+                                <p>Ou, fatorando \( x^2 \):</p>
+                                <p>\( x^2(1+u^2)dx + u^2x^2dx + u x^3du = 0 \)</p>
+                            </li>
+                            <li>
+                                <strong>Separação das Variáveis:</strong>
+                                <p>Dividindo toda a equação por \( x^2 \) (assumindo \( x \neq 0 \)):</p>
+                                <p>\( (1+u^2)dx + u^2dx + u x\,du = 0 \)</p>
+                                <p>Agrupando os termos com \( dx \):</p>
+                                <p>\( (1+2u^2)dx + u x\,du = 0 \)</p>
+                                <p>Isolando \( dx \) e \( du \), obtemos:</p>
+                                <p>\( \frac{dx}{x} = - \frac{u}{1+2u^2}\,du \)</p>
+                            </li>
+                            <li>
+                                <strong>Integração:</strong>
+                                <p>Integre ambos os lados:</p>
+                                <p>\( \displaystyle \int \frac{dx}{x} = - \int \frac{u}{1+2u^2}\,du \)</p>
+                                <p>O lado esquerdo integra para \( \ln|x| \). Para o lado direito, use a substituição \(
+                                    w = 1+2u^2 \), com \( dw = 4u\,du \), o que permite encontrar a integral (detalhes
+                                    da integração podem variar conforme o método escolhido).</p>
+                            </li>
+                            <li>
+                                <strong>Retorno à Variável Original:</strong>
+                                <p>Após integrar, expresse \( u \) em função de \( x \) e lembre-se que \( u =
+                                    \frac{y}{x} \). Substitua de volta para obter a solução geral da EDO.</p>
+                            </li>
+                        </ol>
+
+                        <p>Observação: Dependendo da forma da equação, os passos de separação e integração podem variar,
+                            mas o procedimento geral permanece o mesmo.</p>
+                    </div>
+                </div>
+
+                <!-- 2.5 -->
+                <div class="method-card" id="first-order-2-5">
+                    <h3>2.5 Método de Resolução para EDOs Exatas</h3>
+                    <div class="step-by-step">
+                        <p>Uma equação diferencial da forma</p>
+                        <p>\( M(x,y)\,dx + N(x,y)\,dy = 0 \)</p>
+                        <p>é dita <strong>exata</strong> se existir uma função potencial \( \phi(x,y) \) tal que:</p>
+                        <p>\( \frac{\partial \phi}{\partial x} = M(x,y) \) e \( \frac{\partial \phi}{\partial y} =
+                            N(x,y) \).</p>
+                        <p>A solução geral da EDO é dada por:</p>
+                        <p>\( \phi(x,y) = C \), onde \( C \) é uma constante.</p>
+
+                        <p><strong>Passo a Passo para Resolver uma EDO Exata:</strong></p>
+                        <ol>
+                            <li>
+                                <strong>Verificação de Exatidão:</strong>
+                                <p>Calcule \( M_y = \frac{\partial M}{\partial y} \) e \( N_x = \frac{\partial
+                                    N}{\partial x} \). Se \( M_y = N_x \), a equação é exata.</p>
+                            </li>
+                            <li>
+                                <strong>Integração em Relação a \( x \):</strong>
+                                <p>Integre \( M(x,y) \) em relação a \( x \) para encontrar uma parte de \( \phi(x,y)
+                                    \):</p>
+                                <p>\( \phi(x,y) = \int M(x,y)\,dx + h(y) \), onde \( h(y) \) é uma função de \( y \) a
+                                    ser determinada.</p>
+                            </li>
+                            <li>
+                                <strong>Diferenciação em Relação a \( y \):</strong>
+                                <p>Diferencie \( \phi(x,y) \) em relação a \( y \) e iguale ao \( N(x,y) \):</p>
+                                <p>\( \frac{\partial}{\partial y}\left[\int M(x,y)\,dx + h(y)\right] = N(x,y) \).</p>
+                            </li>
+                            <li>
+                                <strong>Determinação de \( h(y) \):</strong>
+                                <p>Obtenha \( h(y) \) comparando os termos resultantes com \( N(x,y) \). Normalmente,
+                                    isso leva a uma equação diferencial simples para \( h(y) \) que pode ser integrada.
+                                </p>
+                            </li>
+                            <li>
+                                <strong>Solução Geral:</strong>
+                                <p>Substitua \( h(y) \) de volta em \( \phi(x,y) \) e iguale a uma constante: \(
+                                    \phi(x,y)=C \).</p>
+                            </li>
+                        </ol>
+
+                        <p><strong>Exemplo:</strong> Considere a equação</p>
+                        <p>\( (2xy + y^2)\,dx + (x^2 + 2xy)\,dy = 0 \)</p>
+                        <ol>
+                            <li>
+                                <strong>Identifique \( M(x,y) \) e \( N(x,y) \):</strong>
+                                <p>\( M(x,y) = 2xy + y^2 \)</p>
+                                <p>\( N(x,y) = x^2 + 2xy \)</p>
+                            </li>
+                            <li>
+                                <strong>Verifique a Exatidão:</strong>
+                                <p>Calcule:</p>
+                                <p>\( M_y = \frac{\partial}{\partial y}(2xy + y^2) = 2x + 2y \)</p>
+                                <p>\( N_x = \frac{\partial}{\partial x}(x^2 + 2xy) = 2x + 2y \)</p>
+                                <p>Como \( M_y = N_x \), a equação é exata.</p>
+                            </li>
+                            <li>
+                                <strong>Integre \( M(x,y) \) em relação a \( x \):</strong>
+                                <p>\( \phi(x,y) = \int (2xy+y^2)\,dx = x^2y + xy^2 + h(y) \)</p>
+                                <p>(Aqui, \( h(y) \) é uma função de \( y \) que surge por integrar com relação a \( x
+                                    \) e tratando \( y \) como constante.)</p>
+                            </li>
+                            <li>
+                                <strong>Diferencie \( \phi(x,y) \) em relação a \( y \):</strong>
+                                <p>\( \frac{\partial \phi}{\partial y} = x^2 + 2xy + h'(y) \)</p>
+                            </li>
+                            <li>
+                                <strong>Compare com \( N(x,y) \):</strong>
+                                <p>Iguale \( \phi_y(x,y) \) a \( N(x,y) \):</p>
+                                <p>\( x^2 + 2xy + h'(y) = x^2 + 2xy \)</p>
+                                <p>Isso implica que \( h'(y) = 0 \). Assim, \( h(y) \) é constante.</p>
+                            </li>
+                            <li>
+                                <strong>Solução Geral:</strong>
+                                <p>A função potencial é:</p>
+                                <p>\( \phi(x,y) = x^2y + xy^2 + C \)</p>
+                                <p>Portanto, a solução geral é:</p>
+                                <p>\( x^2y + xy^2 = C \)</p>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- 2.6 -->
+                <div class="method-card" id="first-order-2-6">
+                    <h3>2.6 Fatores Integrantes para Transformar EDOs Não Exatas em Exatas</h3>
+                    <div class="step-by-step">
+                        <p>Quando a equação diferencial não é exata, isto é, quando a condição de exatidão <em>\(M_y =
+                                N_x\)</em> não é satisfeita, podemos procurar por um <strong>fator integrante</strong>.
+                            Este é uma função, normalmente de \(x\) ou de \(y\) (ou até de ambas), que, ao multiplicar a
+                            equação original, transforma-a em uma equação exata.</p>
+
+                        <p><strong>Procedimento Geral:</strong></p>
+                        <ol>
+                            <li>
+                                <strong>Verifique a não-exatidão:</strong>
+                                <p>Considere a equação na forma <em>\(M(x,y)\,dx + N(x,y)\,dy = 0\)</em>. Calcule as
+                                    derivadas parciais \(M_y = \frac{\partial M}{\partial y}\) e \(N_x = \frac{\partial
+                                    N}{\partial x}\). Se <em>\(M_y \neq N_x\)</em>, a equação não é exata.</p>
+                            </li>
+                            <li>
+                                <strong>Determine a possibilidade de um fator integrante de \(x\) ou \(y\):</strong>
+                                <p>
+                                    Se a razão
+                                    \[
+                                    \frac{N_x - M_y}{M}
+                                    \]
+                                    for função apenas de \(x\), então existe um fator integrante dependente somente de
+                                    \(x\), dado por:
+                                    \[
+                                    \mu(x) = e^{\int \frac{N_x - M_y}{M}\,dx}
+                                    \]
+                                </p>
+                                <p>
+                                    Alternativamente, se a razão
+                                    \[
+                                    \frac{M_y - N_x}{N}
+                                    \]
+                                    for função apenas de \(y\), então o fator integrante depende somente de \(y\) e é:
+                                    \[
+                                    \mu(y) = e^{\int \frac{M_y - N_x}{N}\,dy}
+                                    \]
+                                </p>
+                            </li>
+                            <li>
+                                <strong>Multiplique a Equação:</strong>
+                                <p>Multiplique toda a equação original pelo fator integrante encontrado (seja \(\mu(x)\)
+                                    ou \(\mu(y)\)). A nova equação terá a forma:</p>
+                                <p>
+                                    \(\mu M\,dx + \mu N\,dy = 0\)
+                                </p>
+                            </li>
+                            <li>
+                                <strong>Verifique a Exatidão:</strong>
+                                <p>Após a multiplicação, verifique se a nova equação é exata, isto é, se:</p>
+                                <p>
+                                    \( (\mu M)_y = (\mu N)_x \)
+                                </p>
+                            </li>
+                            <li>
+                                <strong>Resolva a Equação Exata:</strong>
+                                <p>Uma vez que a equação se torne exata, utilize o método de resolução para EDOs exatas
+                                    para encontrar a função potencial \(\phi(x,y)\) e, consequentemente, a solução geral
+                                    \( \phi(x,y) = C \).</p>
+                            </li>
+                        </ol>
+
+                        <p><strong>Exemplo Genérico:</strong></p>
+                        <p>Suponha que a equação <em>\( (3xy + y^2)\,dx + (x^2 + 3xy)\,dy = 0 \)</em> não seja exata,
+                            pois ao calcularmos \( M_y \) e \( N_x \) obtemos:</p>
+                        <p>
+                            \(M(x,y) = 3xy + y^2\) → \(M_y = 3x + 2y\)
+                        </p>
+                        <p>
+                            \(N(x,y) = x^2 + 3xy\) → \(N_x = 2x + 3y\)
+                        </p>
+                        <p>Como <em>\(M_y \neq N_x\)</em>, a equação não é exata. Ao analisar a expressão \(\frac{N_x -
+                            M_y}{M}\) ou \(\frac{M_y - N_x}{N}\), podemos, se possível, encontrar um fator integrante do
+                            tipo \(\mu(x)\) ou \(\mu(y)\). Após determinar esse fator (por exemplo, \(\mu(x)=e^{\int
+                            f(x)\,dx}\)), multiplicamos a equação original por \(\mu(x)\). Se a nova equação satisfizer
+                            <em>\((\mu M)_y = (\mu N)_x\)</em>, ela se torna exata e pode ser resolvida pelo método das
+                            EDOs exatas.
+                        </p>
+
+                        <p>Este procedimento é uma ferramenta poderosa para transformar problemas aparentemente
+                            intratáveis em equações que podem ser resolvidas de maneira sistemática.</p>
+                    </div>
+                </div>
+
+                <!-- 2.7 -->
+                <div class="method-card" id="first-order-2-7">
+                    <h3>2.7 Equação de Bernoulli</h3>
+                    <div class="step-by-step">
+                        <p>Equações de Bernoulli têm a forma \( y' + p(x)y = q(x)y^n \). Ao realizar a substituição \( u
+                            = y^{1-n} \), a equação se transforma em uma EDO linear em \( u \), que pode ser resolvida
+                            com métodos tradicionais.</p>
+
+                        <h4>Passo a Passo para Resolver uma Equação de Bernoulli:</h4>
+                        <ol>
+                            <li><strong>Identifique os componentes da equação:</strong> Determine \( p(x) \), \( q(x) \)
+                                e \( n \) na equação dada.</li>
+                            <li><strong>Substitua \( u = y^{1-n} \):</strong> Derive \( u \) em relação a \( x \):<br>
+                                \[ u' = (1-n)y^{-n}y' \]<br>
+                                Isolando \( y' \):<br>
+                                \[ y' = \frac{u'}{1-n} y^n \]
+                            </li>
+                            <li><strong>Substitua na equação original:</strong> Substitua \( y' \) e \( y^n \) em termos
+                                de \( u \) e \( u' \):<br>
+                                \[ \frac{u'}{1-n} y^n + p(x)y = q(x)y^n \]<br>
+                                Simplifique a equação resultante.</li>
+                            <li><strong>Transforme em uma equação linear:</strong> A equação resultante será linear em
+                                \( u \).</li>
+                            <li><strong>Resolva a equação linear:</strong> Utilize métodos padrão para resolver equações
+                                diferenciais lineares de primeira ordem.</li>
+                            <li><strong>Substitua \( u \) de volta para \( y \):</strong> Após encontrar \( u(x) \),
+                                recupere \( y(x) \) usando a relação \( y = u^{\frac{1}{1-n}} \).</li>
+                        </ol>
+
+                        <h4>Exemplo:</h4>
+                        <p>Considere a equação de Bernoulli: \( y' - y = y^2 \). Aqui, \( p(x) = -1 \), \( q(x) = 1 \) e
+                            \( n = 2 \).</p>
+
+                        <h5>Passo 1: Substitua \( u = y^{1-n} = y^{-1} \):</h5>
+                        <p>Derivando \( u \):<br>
+                            \[ u' = -y^{-2}y' \]<br>
+                            Isolando \( y' \):<br>
+                            \[ y' = -y^2 u' \]
+                        </p>
+
+                        <h5>Passo 2: Substitua na equação original:</h5>
+                        <p>Substituindo \( y' \) e \( y^2 \):<br>
+                            \[ -y^2 u' - y = y^2 \]<br>
+                            Simplificando:<br>
+                            \[ -u' - y = 1 \]<br>
+                            Como \( y = u^{-1} \):<br>
+                            \[ -u' - u^{-1} = 1 \]
+                        </p>
+
+                        <h5>Passo 3: Transforme em uma equação linear:</h5>
+                        <p>Multiplicando por \( u \):<br>
+                            \[ -u u' - 1 = u \]<br>
+                            Rearranjando:<br>
+                            \[ u u' + u = -1 \]<br>
+                            Ou seja:<br>
+                            \[ u' + u = -\frac{1}{u} \]
+                        </p>
+
+                        <h5>Passo 4: Resolva a equação linear:</h5>
+                        <p>Agora você tem uma equação linear em \( u \), que pode ser resolvida usando métodos
+                            tradicionais para equações lineares.</p>
+
+                        <h5>Passo 5: Substitua \( u \) de volta para \( y \):</h5>
+                        <p>Após resolver para \( u \), recupere \( y \) usando a relação \( y = u^{\frac{1}{1-n}} \).
+                        </p>
+
+                        <p>Este processo transforma uma equação diferencial não linear em uma equação linear, tornando-a
+                            mais fácil de resolver. Se precisar de mais detalhes ou exemplos, consulte a literatura
+                            sobre equações diferenciais de Bernoulli.</p>
+                    </div>
+                </div>
+
+                <!-- 2.8 -->
+                <div class="method-card" id="first-order-2-8">
+                    <h3>2.8 Aplicações - EDOs de Primeira Ordem</h3>
+                    <div class="step-by-step">
+                        <p>Equações diferenciais de primeira ordem são empregadas em diversos contextos práticos, como
+                            em modelos de circuitos elétricos, dinâmica populacional e processos de decaimento. Elas
+                            ajudam a descrever como uma variável muda ao longo do tempo, dependendo de outras variáveis
+                            ou parâmetros envolvidos no sistema.</p>
+
+                        <h4>Exemplos de Aplicações:</h4>
+                        <ol>
+                            <li><strong>Modelagem de circuitos elétricos:</strong> A equação \( \frac{dV}{dt} =
+                                -\frac{1}{RC}V \) descreve o comportamento de um circuito RC, em que \(V\) é a tensão no
+                                capacitor, \(R\) é a resistência e \(C\) é a capacitância. Esta equação modela a
+                                descarga de um capacitor em um circuito RC, e é uma equação diferencial linear de
+                                primeira ordem.</li>
+
+                            <li><strong>Dinâmica populacional:</strong> Em ecologia, a dinâmica de uma população pode
+                                ser modelada com uma equação diferencial de primeira ordem. Um exemplo simples é a
+                                equação de crescimento logístico, dada por \( \frac{dP}{dt} = rP(1 - \frac{P}{K}) \),
+                                onde \(P\) é a população, \(r\) é a taxa de crescimento e \(K\) é a capacidade de carga
+                                do ambiente. Esse modelo descreve o crescimento de uma população com limites impostos
+                                pela disponibilidade de recursos.</li>
+
+                            <li><strong>Processos de decaimento:</strong> Processos de decaimento radioativo ou químico
+                                também podem ser modelados por EDOs de primeira ordem. Um exemplo clássico é a equação
+                                \( \frac{dN}{dt} = -\lambda N \), onde \(N\) é o número de átomos ou moléculas, e \(
+                                \lambda \) é a taxa de decaimento. Esta equação descreve o decaimento exponencial de
+                                substâncias radioativas ou de compostos químicos.</li>
+                        </ol>
+
+                        <h4>Passo a Passo - Exemplo de um Circuito RC:</h4>
+                        <p>Vamos resolver a equação de um circuito RC, que descreve a descarga de um capacitor:</p>
+
+                        <h5>Passo 1: Identificar a equação diferencial</h5>
+                        <p>A equação é dada por:<br>
+                            \( \frac{dV}{dt} = -\frac{1}{RC}V \),<br>
+                            onde \(V\) é a tensão no capacitor, \(R\) é a resistência e \(C\) é a capacitância.</p>
+
+                        <h5>Passo 2: Separar as variáveis</h5>
+                        <p>Reorganize a equação para separar as variáveis \(V\) e \(t\):<br>
+                            \( \frac{dV}{V} = -\frac{1}{RC}dt \)</p>
+
+                        <h5>Passo 3: Integrar ambos os lados</h5>
+                        <p>Agora, integramos ambos os lados:<br>
+                            \( \int \frac{1}{V} dV = -\frac{1}{RC} \int dt \)</p>
+
+                        <h5>Passo 4: Resolver a integral</h5>
+                        <p>Após integrar, obtemos:<br>
+                            \( \ln|V| = -\frac{t}{RC} + C \),<br>
+                            onde \(C\) é a constante de integração.</p>
+
+                        <h5>Passo 5: Resolver para \(V\)</h5>
+                        <p>Exponenciando ambos os lados para resolver para \(V\), temos:<br>
+                            \( V(t) = V_0 e^{-\frac{t}{RC}} \),<br>
+                            onde \(V_0\) é a tensão inicial no capacitor.</p>
+
+                        <h4>Conclusão:</h4>
+                        <p>Portanto, a solução para a equação \( \frac{dV}{dt} = -\frac{1}{RC}V \) é \( V(t) = V_0
+                            e^{-\frac{t}{RC}} \), o que descreve a tensão do capacitor ao longo do tempo durante a
+                            descarga.</p>
+
+                        <p>Esse exemplo ilustra como EDOs de primeira ordem são aplicadas para modelar fenômenos reais,
+                            como a descarga de um capacitor em um circuito RC. Essas equações são fundamentais em muitas
+                            áreas da ciência e engenharia.</p>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Seção 3: EDOs de Segunda Ordem ou Superior -->
+            <section id="second-order">
+                <h2>3. EDOs de Segunda Ordem ou de Ordem Superior</h2>
+
+                <!-- 3.1 -->
+                <div class="method-card" id="second-order-3-1">
+                    <h3>3.1 Teoria Preliminar</h3>
+                    <div class="step-by-step">
+                        <p>Equações diferenciais de segunda ordem envolvem derivadas de ordem maior, ou seja, a segunda
+                            derivada de uma função desconhecida. Elas geralmente aparecem em problemas que modelam
+                            sistemas dinâmicos mais complexos, como em física, engenharia e outras ciências aplicadas. A
+                            solução de uma EDO de segunda ordem é composta por duas partes: a solução homogênea e a
+                            solução particular.</p>
+
+                        <h4>Forma Geral de uma EDO de Segunda Ordem:</h4>
+                        <p>A equação geral de uma EDO linear de segunda ordem pode ser expressa como:<br>
+                            \( y'' + p(x)y' + q(x)y = r(x) \),<br>
+                            onde \( y'' \) é a segunda derivada de \(y\), \( y' \) é a primeira derivada, e \( p(x) \),
+                            \( q(x) \), e \( r(x) \) são funções de \(x\).</p>
+
+                        <h4>Tipo de Solução:</h4>
+                        <p>Uma EDO de segunda ordem geralmente possui uma solução composta por:</p>
+                        <ol>
+                            <li><strong>Solução Homogênea:</strong> A solução da equação homogênea associada \( y'' +
+                                p(x)y' + q(x)y = 0 \), que é obtida a partir de uma equação característica associada.
+                            </li>
+                            <li><strong>Solução Particular:</strong> A solução particular, que é uma solução que depende
+                                da função \( r(x) \) no lado direito da equação.</li>
+                        </ol>
+
+                        <h4>Exemplo de EDO de Segunda Ordem:</h4>
+                        <p>A equação linear homogênea de segunda ordem \( y'' + p(x)y' + q(x)y = 0 \) possui uma solução
+                            geral que pode ser escrita como uma combinação linear de duas soluções linearmente
+                            independentes \( y_1(x) \) e \( y_2(x) \), ou seja, a solução é dada por:<br>
+                            \( y(x) = C_1 y_1(x) + C_2 y_2(x) \),<br>
+                            onde \( C_1 \) e \( C_2 \) são constantes determinadas pelas condições iniciais ou de
+                            contorno.</p>
+
+                        <h4>Teorema do Princípio da Superposição:</h4>
+                        <p>O princípio da superposição afirma que, se \( y_1(x) \) e \( y_2(x) \) são soluções da
+                            equação
+                            homogênea \( y'' + p(x)y' + q(x)y = 0 \), então qualquer combinação linear dessas soluções
+                            também será uma solução. Ou seja, a solução geral da equação homogênea é dada por:</p>
+                        <p> \( y(x) = C_1 y_1(x) + C_2 y_2(x) \),<br>
+                            onde \( y_1(x) \) e \( y_2(x) \) são soluções linearmente independentes e \( C_1 \) e \( C_2
+                            \)
+                            são constantes determinadas pelas condições iniciais ou de contorno.</p>
+
+                        <h4>Passo a Passo - Resolução de EDO de Segunda Ordem:</h4>
+                        <p>Considerando a equação homogênea \( y'' + p(x)y' + q(x)y = 0 \), o procedimento para resolver
+                            envolve os seguintes passos:</p>
+
+                        <h5>Passo 1: Escrever a equação característica</h5>
+                        <p>Assumindo uma solução da forma \( y = e^{rx} \), substituímos isso na equação original para
+                            obter a equação característica:<br>
+                            \( r^2 + p(x)r + q(x) = 0 \),<br>
+                            onde \( r \) é a raiz da equação característica.</p>
+
+                        <h5>Passo 2: Resolver a equação característica</h5>
+                        <p>A equação característica pode ser resolvida utilizando métodos padrão de solução de equações
+                            quadráticas. Dependendo das raízes \( r_1 \) e \( r_2 \), a solução homogênea pode assumir
+                            diferentes formas:</p>
+                        <ul>
+                            <li>Se as raízes forem reais e distintas, a solução será: \( y(x) = C_1 e^{r_1 x} + C_2
+                                e^{r_2 x} \).</li>
+                            <li>Se as raízes forem reais e iguais, a solução será: \( y(x) = (C_1 + C_2 x)e^{r x} \).
+                            </li>
+                            <li>Se as raízes forem complexas, a solução será: \( y(x) = e^{\alpha x}(C_1 \cos(\beta x) +
+                                C_2 \sin(\beta x)) \), onde \( r = \alpha \pm \beta i \). </li>
+                        </ul>
+
+                        <h5>Passo 3: Obter a solução particular</h5>
+                        <p>Se a equação tiver um termo não-homogêneo (ou seja, \( r(x) \neq 0 \)), a solução particular
+                            pode ser encontrada utilizando métodos como o método da variação de parâmetros ou o método
+                            dos coeficientes indeterminados. A solução geral será a soma da solução homogênea e da
+                            solução particular.</p>
+
+                        <h4>Exemplo 1 - EDO Linear Homogênea de Segunda Ordem:</h4>
+                        <p>Considere a equação diferencial \( y'' - 4y' + 4y = 0 \). A equação característica associada
+                            é:</p>
+                        \[
+                        r^2 - 4r + 4 = 0
+                        \]
+                        Resolvendo a equação característica, encontramos uma raiz dupla \( r = 2 \). Assim, a solução
+                        homogênea será dada por:
+                        \[
+                        y(x) = (C_1 + C_2 x)e^{2x}
+                        \]
+                        Essa é a solução geral para essa equação homogênea de segunda ordem.</p>
+
+                        <h4>Exemplo 2 - EDO Não-Homogênea de Segunda Ordem:</h4>
+                        <p>Considere a equação \( y'' + y = \sin(x) \). A equação homogênea associada é \( y'' + y = 0
+                            \), que tem como solução geral:
+                            \[
+                            y_h(x) = C_1 \cos(x) + C_2 \sin(x)
+                            \]
+                            Para encontrar a solução particular, podemos usar o método dos coeficientes indeterminados.
+                            A solução particular é dada por:
+                            \[
+                            y_p(x) = -\frac{1}{2} \cos(x)
+                            \]
+                            Assim, a solução geral será a soma da solução homogênea e particular:
+                            \[
+                            y(x) = C_1 \cos(x) + C_2 \sin(x) - \frac{1}{2} \cos(x)
+                            \]
+
+                        <h4>Wronskiano das Soluções Linearmente Independentes:</h4>
+                        <p>O Wronskiano é um determinante usado para verificar se duas soluções \( y_1(x) \) e \( y_2(x)
+                            \) de uma equação diferencial linear são linearmente independentes. Para duas funções \(
+                            y_1(x) \) e \( y_2(x) \), o Wronskiano é dado por:</p>
+                        \[
+                        W(y_1, y_2) = \begin{vmatrix}
+                        y_1 & y_2 \\
+                        y_1' & y_2'
+                        \end{vmatrix} = y_1 y_2' - y_2 y_1'
+                        \]
+                        <p>Se o Wronskiano for diferente de zero em algum ponto, então as soluções \( y_1(x) \) e \(
+                            y_2(x) \) são linearmente independentes. Caso contrário, se o Wronskiano for zero em todos
+                            os pontos, as soluções são linearmente dependentes.</p>
+
+                        <h4>Exemplo do Wronskiano:</h4>
+                        <p>Considere as soluções \( y_1(x) = e^{2x} \) e \( y_2(x) = e^{3x} \). O Wronskiano é calculado
+                            como:</p>
+                        \[
+                        W(y_1, y_2) = \begin{vmatrix}
+                        e^{2x} & e^{3x} \\
+                        2e^{2x} & 3e^{3x}
+                        \end{vmatrix} = e^{2x}(3e^{3x}) - e^{3x}(2e^{2x}) = e^{5x} - e^{5x} = e^{5x} \neq 0
+                        \]
+                        Como o Wronskiano é diferente de zero, as soluções são linearmente independentes.
+
+                        <h4>Conclusão:</h4>
+                        <p>A solução de uma EDO de segunda ordem envolve encontrar as soluções homogênea e particular,
+                            combinando-as para formar a solução geral. O comportamento da solução depende das raízes da
+                            equação característica, e o Wronskiano pode ser usado para verificar a linearidade das
+                            soluções.</p>
+                    </div>
+                </div>
+                <!-- 3.2 -->
+                <div class="method-card" id="second-order-3-2">
+                    <h3>3.2 Método da Redução da Ordem</h3>
+                    <div class="step-by-step">
+                        <p>O método da redução da ordem é utilizado quando já conhecemos uma solução \( y_1(x) \) de uma
+                            equação diferencial de segunda ordem. Nesse caso, procuramos uma segunda solução \( y_2(x)
+                            \) que pode ser expressa como o produto de uma função desconhecida \( v(x) \) e \( y_1(x)
+                            \), ou seja, \( y_2(x) = v(x) y_1(x) \). Esse método é eficaz porque, ao substituir \(
+                            y_2(x) \) na equação original, podemos reduzir a ordem da equação diferencial, simplificando
+                            a resolução.</p>
+
+                        <h4>Forma Geral do Método:</h4>
+                        <p>Suponha que a equação de segunda ordem tenha a forma:<br>
+                            \( y'' + p(x)y' + q(x)y = 0 \),<br>
+                            e que já conhecemos uma solução \( y_1(x) \). Propondo que a segunda solução seja \( y_2(x)
+                            = v(x) y_1(x) \), onde \( v(x) \) é uma função a ser determinada, podemos substituir essa
+                            expressão na equação original para obter uma equação de primeira ordem para \( v(x) \).</p>
+
+                        <h4>Passo a Passo - Aplicação do Método:</h4>
+                        <h5>Passo 1: Suposição da Forma da Segunda Solução</h5>
+                        <p>Assumimos que a segunda solução \( y_2(x) \) tem a forma \( y_2(x) = v(x) y_1(x) \), onde \(
+                            y_1(x) \) já é conhecida. A função \( v(x) \) ainda precisa ser determinada.</p>
+
+                        <h5>Passo 2: Substituição na Equação Original</h5>
+                        <p>Substituímos \( y_2(x) = v(x) y_1(x) \) na equação diferencial original \( y'' + p(x)y' +
+                            q(x)y = 0 \). Para isso, calculamos as derivadas de \( y_2(x) \):<br>
+                            \( y_2'(x) = v'(x) y_1(x) + v(x) y_1'(x) \)<br>
+                            \( y_2''(x) = v''(x) y_1(x) + 2 v'(x) y_1'(x) + v(x) y_1''(x) \).</p>
+
+                        <h5>Passo 3: Substituição nas Derivadas na Equação</h5>
+                        <p>Substituímos as expressões para \( y_2'(x) \) e \( y_2''(x) \) na equação original. Como \(
+                            y_1(x) \) é uma solução da equação diferencial, ela satisfaz a equação \( y_1'' + p(x)y_1' +
+                            q(x)y_1 = 0 \), e muitos termos vão se cancelar. O que sobra é uma equação de primeira ordem
+                            para \( v(x) \). O objetivo é resolver essa equação para encontrar \( v(x) \).</p>
+
+                        <h5>Passo 4: Resolver a Equação de Primeira Ordem para \( v(x) \)</h5>
+                        <p>A equação resultante será uma equação de primeira ordem para \( v(x) \). Após resolver para
+                            \( v(x) \), podemos determinar a segunda solução \( y_2(x) = v(x) y_1(x) \).</p>
+
+                        <h5>Passo 5: Obter a Solução Geral</h5>
+                        <p>A solução geral da equação diferencial será dada pela combinação linear das soluções \(
+                            y_1(x) \) e \( y_2(x) \), ou seja:<br>
+                            \( y(x) = C_1 y_1(x) + C_2 y_2(x) \),<br>
+                            onde \( C_1 \) e \( C_2 \) são constantes determinadas pelas condições iniciais ou de
+                            contorno.</p>
+
+                        <h4>Exemplo:</h4>
+                        <p>Considere a equação \( y'' - 3y' + 2y = 0 \), e seja \( y_1(x) = e^x \) uma solução
+                            conhecida. Vamos procurar uma segunda solução na forma \( y_2(x) = v(x)e^x \).</p>
+
+                        <p>Substituindo \( y_2(x) = v(x)e^x \) na equação original, obtemos as derivadas:<br>
+                            \( y_2'(x) = v'(x)e^x + v(x)e^x \),<br>
+                            \( y_2''(x) = v''(x)e^x + 2v'(x)e^x + v(x)e^x \).<br>
+                            Substituindo essas derivadas na equação original \( y'' - 3y' + 2y = 0 \), obtemos a equação
+                            de primeira ordem para \( v(x) \), que podemos resolver para encontrar \( v(x) \).</p>
+
+                        <h4>Conclusão:</h4>
+                        <p>O método da redução da ordem é uma técnica poderosa para encontrar uma segunda solução quando
+                            já conhecemos uma solução de uma EDO de segunda ordem. Ele reduz a ordem da equação para uma
+                            equação de primeira ordem, simplificando o processo de resolução e permitindo encontrar a
+                            solução geral da equação.</p>
+                    </div>
+                </div>
+
+                <!-- 3.3 -->
+                <div class="method-card" id="second-order-3-3">
+                    <h3>3.3 Equações Lineares Homogêneas com Coeficientes Constantes</h3>
+                    <div class="step-by-step">
+                        <p>Equações diferenciais lineares homogêneas de segunda ordem com coeficientes constantes têm a
+                            forma geral:<br>
+                            \( y'' + p y' + q y = 0 \),<br>
+                            onde \( p \) e \( q \) são constantes. A solução dessas equações pode ser obtida assumindo
+                            uma solução do tipo \( y = e^{mx} \), onde \( m \) é uma constante a ser determinada.</p>
+
+                        <h4>Passo a Passo - Resolução da Equação:</h4>
+                        <h5>Passo 1: Suposição da Solução</h5>
+                        <p>Assumimos que a solução tem a forma \( y(x) = e^{mx} \), onde \( m \) é uma constante a ser
+                            determinada. Esta suposição é válida para equações lineares com coeficientes constantes,
+                            pois \( e^{mx} \) é uma função que possui derivadas simples e fáceis de manipular.</p>
+
+                        <h5>Passo 2: Substituição na Equação Diferencial</h5>
+                        <p>Substituímos \( y(x) = e^{mx} \) na equação diferencial original. Calculamos as derivadas de
+                            \( y(x) \):<br>
+                            \( y'(x) = m e^{mx} \),<br>
+                            \( y''(x) = m^2 e^{mx} \).<br>
+                            Agora, substituímos essas expressões na equação \( y'' + p y' + q y = 0 \), o que resulta
+                            em:</p>
+                        \( m^2 e^{mx} + p m e^{mx} + q e^{mx} = 0 \).
+
+                        <h5>Passo 3: Obtenção da Equação Característica</h5>
+                        <p>Como \( e^{mx} \) nunca é zero, podemos dividir a equação por \( e^{mx} \), resultando na
+                            equação característica:<br>
+                            \( m^2 + p m + q = 0 \),<br>
+                            que é uma equação quadrática em \( m \). Resolvendo essa equação quadrática, encontramos as
+                            raízes \( m_1 \) e \( m_2 \), que determinam a solução da equação diferencial.</p>
+
+                        <h5>Passo 4: Determinação da Solução Geral</h5>
+                        <p>Dependendo das raízes \( m_1 \) e \( m_2 \) da equação característica, a solução geral será
+                            diferente:</p>
+                        <ul>
+                            <li>Se \( m_1 \) e \( m_2 \) forem reais e distintos, a solução será:<br>
+                                \( y(x) = C_1 e^{m_1 x} + C_2 e^{m_2 x} \),<br>
+                                onde \( C_1 \) e \( C_2 \) são constantes a serem determinadas pelas condições iniciais.
+                            </li>
+                            <li>Se \( m_1 = m_2 \) (raízes reais e iguais), a solução será:<br>
+                                \( y(x) = (C_1 + C_2 x) e^{m_1 x} \).</li>
+                            <li>Se \( m_1 \) e \( m_2 \) forem complexas, a solução será:<br>
+                                \( y(x) = e^{\text{Re}(m) x} \left( C_1 \cos(\text{Im}(m) x) + C_2 \sin(\text{Im}(m) x)
+                                \right) \),<br>
+                                onde \( \text{Re}(m) \) é a parte real e \( \text{Im}(m) \) é a parte imaginária de \( m
+                                \).</li>
+                        </ul>
+
+                        <h4>Exemplo:</h4>
+                        <p>Considere a equação \( y'' - 5y' + 6y = 0 \). A equação característica é:<br>
+                            \( m^2 - 5m + 6 = 0 \).<br>
+                            Resolvendo a equação quadrática, obtemos as raízes \( m_1 = 2 \) e \( m_2 = 3 \).<br>
+                            Assim, a solução geral será:<br>
+                            \( y(x) = C_1 e^{2x} + C_2 e^{3x} \).</p>
+
+                        <h4>Conclusão:</h4>
+                        <p>Equações diferenciais lineares homogêneas com coeficientes constantes são resolvidas
+                            assumindo uma solução do tipo \( y = e^{mx} \), onde \( m \) é determinado pela equação
+                            característica. Dependendo das raízes dessa equação, a solução geral pode envolver funções
+                            exponenciais ou trigonométricas, e as constantes \( C_1 \) e \( C_2 \) podem ser
+                            determinadas pelas condições iniciais ou de contorno.</p>
+                    </div>
+                </div>
+
+                <!-- 3.3.1 -->
+                <div class="method-card" id="second-order-3-3-1">
+                    <h3>3.3.1 EDO de Segunda Ordem</h3>
+                    <div class="step-by-step">
+                        <p>Equações diferenciais de segunda ordem com coeficientes constantes, como \( y'' + p y' + q y
+                            = 0 \), podem ser resolvidas encontrando as raízes da equação característica associada.</p>
+
+                        <h4>Passo a Passo - Resolução de EDO de Segunda Ordem com Coeficientes Constantes:</h4>
+                        <p>Considere a equação diferencial \( y'' - 4y = 0 \). O procedimento para resolvê-la é o
+                            seguinte:</p>
+
+                        <h5>Passo 1: Escrever a equação característica</h5>
+                        <p>Assumimos uma solução da forma \( y = e^{mx} \), substituímos na equação original e obtemos a
+                            equação característica:</p>
+                        \[
+                        m^2 - 4 = 0
+                        \]
+                        Assim, a equação característica é \( m^2 - 4 = 0 \), que pode ser resolvida como uma equação
+                        quadrática.</p>
+
+                        <h5>Passo 2: Resolver a equação característica</h5>
+                        <p>Resolvendo \( m^2 - 4 = 0 \), obtemos as raízes:</p>
+                        \[
+                        m = \pm 2
+                        \]
+                        Como as raízes são reais e distintas, a solução homogênea da equação diferencial será dada por:
+                        </p>
+                        \[
+                        y(x) = C_1 e^{2x} + C_2 e^{-2x}
+                        \]
+                        onde \( C_1 \) e \( C_2 \) são constantes que podem ser determinadas pelas condições iniciais ou
+                        de contorno.</p>
+
+                        <h4>Exemplo:</h4>
+                        <p>Considere a equação \( y'' - 4y = 0 \). A equação característica é:</p>
+                        \[
+                        m^2 - 4 = 0 \quad \Rightarrow \quad m = \pm 2
+                        \]
+                        A solução geral é, portanto:</p>
+                        \[
+                        y(x) = C_1 e^{2x} + C_2 e^{-2x}
+                        \]
+                        Se, por exemplo, tivermos as condições iniciais \( y(0) = 1 \) e \( y'(0) = 0 \), podemos
+                        determinar os valores de \( C_1 \) e \( C_2 \) aplicando essas condições. Para \( y(0) = 1 \),
+                        temos:
+                        \[
+                        1 = C_1 + C_2
+                        \]
+                        E para \( y'(0) = 0 \), temos:
+                        \[
+                        0 = 2C_1 - 2C_2
+                        \]
+                        Resolvendo esse sistema de equações, obtemos \( C_1 = 1 \) e \( C_2 = 0 \), assim a solução
+                        particular será:
+                        \[
+                        y(x) = e^{2x}
+                        \]
+
+                        <h4>Conclusão:</h4>
+                        <p>Quando a equação diferencial de segunda ordem tem coeficientes constantes e a equação
+                            característica resulta em raízes reais distintas, a solução geral é uma combinação linear de
+                            exponenciais. As constantes \( C_1 \) e \( C_2 \) são determinadas pelas condições iniciais
+                            ou de contorno.</p>
+                    </div>
+                </div>
+
+                <!-- 3.3.2 -->
+                <div class="method-card" id="second-order-3-3-2">
+                    <h3>3.3.2 EDO de Ordem Superior</h3>
+                    <div class="step-by-step">
+                        <p>Para equações diferenciais de ordem superior com coeficientes constantes, o procedimento é
+                            análogo ao das equações de segunda ordem. O primeiro passo é obter a equação característica
+                            associada à EDO e, em seguida, construir a solução geral a partir das raízes da equação
+                            característica.</p>
+
+                        <h4>Passo a Passo - Resolução de EDO de Ordem Superior:</h4>
+                        <p>Considere uma equação de ordem superior \( y^{(n)} + p_1 y^{(n-1)} + \dots + p_n y = 0 \). O
+                            procedimento segue os seguintes passos:</p>
+
+                        <h5>Passo 1: Escrever a equação característica</h5>
+                        <p>Assumimos uma solução da forma \( y = e^{mx} \) (onde \( m \) é uma constante a ser
+                            determinada). Substituímos essa expressão na equação original para obter a equação
+                            característica:</p>
+                        \[
+                        m^n + p_1 m^{n-1} + \dots + p_n = 0
+                        \]
+                        onde \( m \) são as raízes da equação característica.</p>
+
+                        <h5>Passo 2: Resolver a equação característica</h5>
+                        <p>Resolvemos a equação característica como uma equação polinomial de grau \( n \). Dependendo
+                            das raízes \( m_1, m_2, \dots, m_n \), a solução homogênea pode assumir diferentes formas:
+                        </p>
+                        <ul>
+                            <li>Se as raízes forem reais e distintas, a solução será uma combinação linear de
+                                exponenciais:
+                                \( y(x) = C_1 e^{m_1 x} + C_2 e^{m_2 x} + \dots + C_n e^{m_n x} \).
+                            </li>
+                            <li>Se houver raízes repetidas, a solução será modificada para incorporar multiplicações por
+                                potências de \( x \), como \( y(x) = (C_1 + C_2 x)e^{m x} \), para raízes duplas, ou \(
+                                y(x) = (C_1 + C_2 x + C_3 x^2)e^{m x} \), para raízes triplas, e assim por diante.</li>
+                            <li>Se as raízes forem complexas, a solução será uma combinação de funções exponenciais com
+                                termos trigonométricos: \( y(x) = e^{\alpha x}(C_1 \cos(\beta x) + C_2 \sin(\beta x))
+                                \), onde as raízes da equação característica são \( m = \alpha \pm \beta i \).</li>
+                        </ul>
+
+                        <h5>Passo 3: Obter a solução geral</h5>
+                        <p>A solução geral será a combinação linear das soluções associadas às diferentes raízes da
+                            equação característica.</p>
+
+                        <h4>Exemplo:</h4>
+                        <p>Considere uma equação de terceira ordem \( y^{(3)} - 6y' + 11y = 0 \). A equação
+                            característica associada é:</p>
+                        \[
+                        m^3 - 6m + 11 = 0
+                        \]
+                        Resolva esta equação para encontrar as raízes \( m_1, m_2, m_3 \). Suponhamos que as raízes
+                        sejam \( m_1 = 1 \), \( m_2 = 2 \) e \( m_3 = 3 \). A solução geral será dada por:</p>
+                        \[
+                        y(x) = C_1 e^{x} + C_2 e^{2x} + C_3 e^{3x}
+                        \]
+                        onde \( C_1 \), \( C_2 \) e \( C_3 \) são constantes determinadas pelas condições iniciais ou de
+                        contorno.</p>
+
+                        <h4>Conclusão:</h4>
+                        <p>Para EDOs de ordem superior, a solução geral pode ser formada como uma combinação linear das
+                            soluções associadas às raízes da equação característica. O número de soluções depende do
+                            grau da equação e das raízes encontradas.</p>
+                    </div>
+                </div>
+
+                <!-- 3.4 -->
+                <div class="method-card" id="second-order-3-4">
+                    <h3>3.4 EDOs Não Homogêneas – Coeficientes Indeterminados – Superposição</h3>
+                    <div class="step-by-step">
+                        <p>Este método é utilizado para resolver equações diferenciais não homogêneas, onde o lado
+                            direito da equação não é zero. O objetivo é encontrar uma solução particular para a equação
+                            não homogênea, somando-a à solução homogênea associada. O processo envolve assumir uma forma
+                            para a solução particular e, em seguida, determinar os coeficientes desconhecidos por meio
+                            da substituição na equação.</p>
+
+                        <h4>Passo a Passo - Resolução de EDOs Não Homogêneas com Coeficientes Indeterminados:</h4>
+
+                        <h5>Passo 1: Resolver a equação homogênea associada</h5>
+                        <p>Primeiro, resolve-se a equação homogênea associada, ou seja, a equação sem o termo não
+                            homogêneo (lado direito diferente de zero). A solução homogênea pode ser obtida utilizando o
+                            procedimento descrito anteriormente para EDOs homogêneas. Essa solução é chamada de \( y_h
+                            \).</p>
+
+                        <h5>Passo 2: Assumir uma forma para a solução particular</h5>
+                        <p>Em seguida, assume-se uma forma para a solução particular \( y_p \), dependendo da forma do
+                            termo não homogêneo \( r(x) \). A escolha da forma da solução particular depende da natureza
+                            de \( r(x) \). Por exemplo:</p>
+                        <ul>
+                            <li>Se \( r(x) \) é uma função polinomial, assume-se que \( y_p \) também é um polinômio de
+                                grau apropriado.</li>
+                            <li>Se \( r(x) \) é uma função exponencial \( e^{ax} \), então \( y_p \) também será da
+                                forma \( A e^{ax} \), onde \( A \) é uma constante a ser determinada.</li>
+                            <li>Se \( r(x) \) é uma função trigonométrica \( \sin(kx) \) ou \( \cos(kx) \), assume-se
+                                que \( y_p \) será da forma \( A \sin(kx) + B \cos(kx) \).</li>
+                        </ul>
+
+                        <h5>Passo 3: Substituir a solução particular na equação original</h5>
+                        <p>A solução particular assumida deve ser substituída na equação original. Isso permitirá
+                            encontrar os coeficientes indeterminados, que são as constantes da solução particular. Para
+                            cada termo da equação, as constantes podem ser determinadas por comparação de coeficientes.
+                        </p>
+
+                        <h5>Passo 4: Combinar a solução homogênea e a solução particular</h5>
+                        <p>Finalmente, a solução geral da EDO será dada pela soma da solução homogênea \( y_h \) e da
+                            solução particular \( y_p \), ou seja:</p>
+                        \[
+                        y(x) = y_h(x) + y_p(x)
+                        \]
+                        onde \( y_h(x) \) é a solução da equação homogênea e \( y_p(x) \) é a solução particular
+                        determinada pelo método dos coeficientes indeterminados.</p>
+
+                        <h4>Exemplo:</h4>
+                        <p>Considere a equação diferencial não homogênea:</p>
+                        \[
+                        y'' + 3y' + 2y = e^{x}
+                        \]
+                        A equação homogênea associada é:</p>
+                        \[
+                        y'' + 3y' + 2y = 0
+                        \]
+                        A solução homogênea \( y_h(x) \) é dada por:</p>
+                        \[
+                        y_h(x) = C_1 e^{-x} + C_2 e^{-2x}
+                        \]
+                        Agora, assumimos uma solução particular da forma \( y_p(x) = A e^{x} \), onde \( A \) é uma
+                        constante a ser determinada. Substituindo \( y_p(x) \) na equação original, obtemos:</p>
+                        \[
+                        (A e^{x})'' + 3(A e^{x})' + 2(A e^{x}) = e^{x}
+                        \]
+                        Resolvendo essa equação para \( A \), encontramos \( A = \frac{1}{2} \).</p>
+
+                        Assim, a solução geral será:</p>
+                        \[
+                        y(x) = C_1 e^{-x} + C_2 e^{-2x} + \frac{1}{2} e^{x}
+                        \]
+
+                        <h4>Conclusão:</h4>
+                        <p>O método dos coeficientes indeterminados permite encontrar a solução de uma EDO não
+                            homogênea, assumindo uma forma para a solução particular com base na função do lado direito
+                            da equação. A solução geral é a soma da solução homogênea e da solução particular.</p>
+                    </div>
+                </div>
+
+                <!-- 3.4.1 -->
+                <div class="method-card" id="second-order-3-4-1">
+                    <h3>3.4.1 Tipos de Soluções</h3>
+                    <div class="step-by-step">
+                        <p>A solução geral de uma equação diferencial ordinária (EDO) não homogênea é composta por duas
+                            partes:</p>
+                        <ol>
+                            <li><strong>Solução Homogênea:</strong> A solução da equação homogênea associada, ou seja, a
+                                equação sem o termo não homogêneo. Esta solução é obtida através da resolução da equação
+                                homogênea e é geralmente expressa como uma soma de funções lineares independentes.</li>
+                            <li><strong>Solução Particular:</strong> A solução particular é uma solução que depende
+                                diretamente do termo não homogêneo (lado direito) da equação. A forma da solução
+                                particular depende da função \( r(x) \) no lado direito da equação e pode ser
+                                determinada através de métodos como os coeficientes indeterminados ou o método da
+                                variação de parâmetros.</li>
+                        </ol>
+
+                        <h4>Forma da Solução Geral:</h4>
+                        <p>A solução geral de uma EDO não homogênea é dada pela soma da solução homogênea e da solução
+                            particular:</p>
+                        \[
+                        y(x) = y_h(x) + y_p(x)
+                        \]
+                        onde:
+                        <ul>
+                            <li> \( y_h(x) \) é a solução homogênea associada à equação \( y'' + p(x)y' + q(x)y = 0 \),
+                            </li>
+                            <li> \( y_p(x) \) é a solução particular obtida por métodos apropriados para o termo não
+                                homogêneo.</li>
+                        </ul>
+
+                        <h4>Exemplo:</h4>
+                        <p>Considere a equação diferencial não homogênea:</p>
+                        \[
+                        y'' + 2y' + y = e^{x}
+                        \]
+                        A equação homogênea associada é:</p>
+                        \[
+                        y'' + 2y' + y = 0
+                        \]
+                        A solução homogênea \( y_h(x) \) é dada por:</p>
+                        \[
+                        y_h(x) = C_1 e^{-x} + C_2 e^{-x}
+                        \]
+                        Agora, assumimos uma solução particular da forma \( y_p(x) = A e^{x} \), onde \( A \) é uma
+                        constante a ser determinada. Substituindo \( y_p(x) \) na equação original, obtemos:</p>
+                        \[
+                        (A e^{x})'' + 2(A e^{x})' + (A e^{x}) = e^{x}
+                        \]
+                        Resolvendo essa equação para \( A \), encontramos \( A = \frac{1}{2} \).</p>
+
+                        Assim, a solução geral será:</p>
+                        \[
+                        y(x) = C_1 e^{-x} + C_2 e^{-x} + \frac{1}{2} e^{x}
+                        \]
+
+                        <h4>Conclusão:</h4>
+                        <p>Portanto, a solução geral de uma EDO não homogênea pode ser obtida somando a solução
+                            homogênea e a solução particular. A solução homogênea é baseada na equação sem o termo não
+                            homogêneo, enquanto a solução particular é determinada pelo termo não homogêneo da equação.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 3.5 -->
+                <div class="method-card" id="second-order-3-5">
+                    <h3>3.5 Variação dos Parâmetros</h3>
+                    <div class="step-by-step">
+                        <p>O método de variação dos parâmetros é utilizado para encontrar a solução particular de uma
+                            equação diferencial não homogênea, quando a solução homogênea já é conhecida. A ideia
+                            central desse método é permitir que as constantes da solução homogênea se tornem funções, de
+                            forma a ajustar a solução para acomodar o termo não homogêneo.</p>
+
+                        <h4>Passo a Passo para a Variação dos Parâmetros:</h4>
+                        <ol>
+                            <li><strong>Passo 1: Encontrar a solução homogênea:</strong> Resolva a equação homogênea
+                                associada à EDO, ou seja, \( y'' + p(x)y' + q(x)y = 0 \). A solução homogênea será dada
+                                por uma combinação linear de funções linearmente independentes, \( y_h = C_1 y_1(x) +
+                                C_2 y_2(x) \), onde \( y_1(x) \) e \( y_2(x) \) são soluções da equação homogênea.</li>
+                            <li><strong>Passo 2: Supor a forma para a solução particular:</strong> A solução particular
+                                \( y_p(x) \) será da forma \( y_p = u_1(x)y_1(x) + u_2(x)y_2(x) \), onde \( u_1(x) \) e
+                                \( u_2(x) \) são funções a serem determinadas.</li>
+                            <li><strong>Passo 3: Substituir na equação original:</strong> Substitua a forma da solução
+                                \( y_p \) na equação não homogênea. Isso gerará uma equação que pode ser usada para
+                                encontrar as funções \( u_1(x) \) e \( u_2(x) \).</li>
+                            <li><strong>Passo 4: Resolver para \( u_1(x) \) e \( u_2(x) \):</strong> Resolva as equações
+                                obtidas para \( u_1(x) \) e \( u_2(x) \) usando métodos padrão de integração.</li>
+                            <li><strong>Passo 5: Obter a solução geral:</strong> A solução geral será a soma da solução
+                                homogênea \( y_h \) e da solução particular \( y_p \), ou seja, \( y(x) = y_h + y_p \).
+                            </li>
+                        </ol>
+
+                        <h4>Exemplo de Aplicação:</h4>
+                        <p>Considere a equação diferencial:</p>
+                        \[
+                        y'' + y = \sec x
+                        \]
+                        A solução homogênea associada é dada por:</p>
+                        \[
+                        y_h = C_1 \cos x + C_2 \sin x
+                        \]
+                        Agora, aplicamos a variação dos parâmetros, assumindo a forma da solução particular como:</p>
+                        \[
+                        y_p = u_1(x) \cos x + u_2(x) \sin x
+                        \]
+                        Para determinar \( u_1(x) \) e \( u_2(x) \), devemos substituir \( y_p \) na equação original. O
+                        próximo passo seria resolver para essas funções, utilizando as equações derivadas da
+                        substituição. O resultado final seria a solução particular \( y_p(x) \), e a solução geral seria
+                        dada por:</p>
+                        \[
+                        y(x) = C_1 \cos x + C_2 \sin x + y_p(x)
+                        \]
+
+                        <h4>Conclusão:</h4>
+                        <p>O método de variação dos parâmetros é um procedimento eficaz para encontrar a solução
+                            particular de uma equação diferencial não homogênea. Ele é particularmente útil quando o
+                            método dos coeficientes indeterminados não é aplicável, especialmente quando o termo não
+                            homogêneo tem uma forma mais complexa.</p>
+                    </div>
+                </div>
+
+                <!-- 3.6 -->
+                <div class="method-card" id="second-order-3-6">
+                    <h3>3.6 Equação de Cauchy-Euler</h3>
+                    <div class="step-by-step">
+                        <p>As equações de Cauchy-Euler têm a forma geral \( x^2y'' + axy' + by = 0 \), onde \( y'' \) e
+                            \( y' \) são as segunda e primeira derivadas de \( y \), respectivamente. Essas equações
+                            podem ser resolvidas assumindo uma solução do tipo \( y = x^m \), onde \( m \) é um valor a
+                            ser determinado a partir da equação característica.</p>
+
+                        <h4>Forma Geral da Equação:</h4>
+                        <p>A equação de Cauchy-Euler pode ser escrita como:</p>
+                        \[
+                        x^2 y'' + axy' + by = 0
+                        \]
+                        Ao substituir \( y = x^m \) na equação original, obtemos a equação característica associada, que
+                        é dada por:</p>
+                        \[
+                        m(m-1) + am + b = 0
+                        \]
+                        Essa equação quadrática nos fornece as raízes \( m_1 \) e \( m_2 \), que determinam a forma da
+                        solução geral.
+
+                        <h4>Casos de Raízes:</h4>
+                        <p>Dependendo das raízes da equação característica, a solução da EDO pode assumir diferentes
+                            formas:</p>
+                        <ol>
+                            <li><strong>Raízes Reais Distintas:</strong> Quando as raízes \( m_1 \) e \( m_2 \) são
+                                reais e distintas, a solução geral é dada por:</li>
+                            \[
+                            y(x) = C_1 x^{m_1} + C_2 x^{m_2}
+                            \]
+                            onde \( C_1 \) e \( C_2 \) são constantes determinadas pelas condições iniciais ou de
+                            contorno.</p>
+
+                            <li><strong>Raízes Reais Iguais:</strong> Quando as raízes \( m_1 \) e \( m_2 \) são iguais
+                                (ou seja, \( m_1 = m_2 = m \)), a solução geral é dada por:</li>
+                            \[
+                            y(x) = (C_1 + C_2 \ln |x|) x^m
+                            \]
+                            Esse termo extra com \( \ln |x| \) surge devido à multiplicidade das raízes.</p>
+
+                            <li><strong>Raízes Complexas:</strong> Quando as raízes \( m_1 \) e \( m_2 \) são complexas,
+                                ou seja, \( m_1 = \alpha + i\beta \) e \( m_2 = \alpha - i\beta \), a solução geral é
+                                dada por:</li>
+                            \[
+                            y(x) = x^{\alpha} \left( C_1 \cos(\beta \ln x) + C_2 \sin(\beta \ln x) \right)
+                            \]
+                            Nesse caso, a solução envolve funções trigonométricas que dependem de \( \ln x \),
+                            refletindo a natureza oscilatória das raízes complexas.</p>
+                        </ol>
+
+                        <h4>Exemplo de Aplicação:</h4>
+                        <p>Considere a equação de Cauchy-Euler:</p>
+                        \[
+                        x^2 y'' + 3x y' + y = 0
+                        \]
+                        Substituindo \( y = x^m \) na equação, obtemos a equação característica:</p>
+                        \[
+                        m(m-1) + 3m + 1 = 0
+                        \]
+                        Resolvendo essa equação quadrática, obtemos as raízes \( m_1 = -1 \) e \( m_2 = -1 \), que são
+                        iguais. Portanto, a solução geral é dada por:</p>
+                        \[
+                        y(x) = (C_1 + C_2 \ln |x|) x^{-1}
+                        \]
+                        Aqui, o termo \( \ln |x| \) aparece devido à multiplicidade das raízes.
+
+                        <h4>Conclusão:</h4>
+                        <p>As equações de Cauchy-Euler são comuns em problemas de física e engenharia, especialmente em
+                            sistemas dinâmicos e problemas de elasticidade. A forma da solução depende fortemente das
+                            raízes da equação característica, e os casos de raízes complexas ou múltiplas devem ser
+                            tratados com cuidado para garantir uma solução completa.</p>
+                    </div>
+                </div>
+
+                <!-- 3.7 -->
+                <div class="method-card" id="second-order-3-7">
+                    <h3>3.7 Resolução por Operadores Anuladores</h3>
+                    <div class="step-by-step">
+                        <p>O método de resolução por operadores anuladores é um procedimento que utiliza operadores
+                            diferenciais para "anular" certas funções da equação diferencial original, transformando-a
+                            em uma equação mais simples de resolver. Esse método é especialmente útil em equações
+                            diferenciais lineares de segunda ordem, onde os operadores podem ser aplicados para reduzir
+                            a equação a um problema mais manejável.</p>
+
+                        <h4>Operadores Anuladores:</h4>
+                        <p>Um operador diferencial é uma expressão que envolve derivadas de uma função. O operador
+                            aniquilador é um operador que, quando aplicado a uma função, resulta em zero. Por exemplo,
+                            se tivermos a função \( y = e^{mx} \), o operador diferencial \( D^2 - 2mD + m^2 \) (onde \(
+                            D \) é a operação de derivada) pode ser usado para aniquilar a função, tornando a equação
+                            mais simples de resolver.</p>
+
+                        <h4>Passo a Passo - Resolução por Operadores Anuladores:</h4>
+                        <p>O procedimento para resolver uma equação diferencial usando operadores anuladores envolve os
+                            seguintes passos:</p>
+
+                        <h5>Passo 1: Identificar o operador anulador</h5>
+                        <p>Determine o operador diferencial que anula a função dada na equação. Por exemplo, se a
+                            equação envolvesse uma solução do tipo \( y = e^{mx} \), o operador anulador seria \( D - m
+                            \), onde \( m \) é a constante associada à exponencial.</p>
+
+                        <h5>Passo 2: Aplicar o operador à equação</h5>
+                        <p>Depois de identificar o operador, aplique-o à equação diferencial original. O objetivo é
+                            simplificar a equação para um formato mais fácil de resolver, muitas vezes transformando-a
+                            em uma equação de ordem inferior.</p>
+
+                        <h5>Passo 3: Resolver a equação resultante</h5>
+                        <p>Uma vez que o operador anulador tenha simplificado a equação, resolve-se a equação
+                            resultante, que deve ser mais fácil de manejar. A solução obtida pode ser usada para
+                            determinar as constantes da solução geral.</p>
+
+                        <h4>Exemplo de Aplicação:</h4>
+                        <p>Considere a equação diferencial:</p>
+                        \[
+                        y'' - 3y' + 2y = 0
+                        \]
+                        A solução geral dessa equação pode ser obtida usando o operador anulador. O operador associado a
+                        \( e^{mx} \) seria \( D^2 - 3D + 2 \), o qual anula a função \( y = e^{mx} \). Aplicando o
+                        operador à equação original, obtemos a equação característica:</p>
+                        \[
+                        m^2 - 3m + 2 = 0
+                        \]
+                        Resolvendo essa equação quadrática, encontramos as raízes \( m_1 = 1 \) e \( m_2 = 2 \).
+                        Portanto, a solução geral é dada por:</p>
+                        \[
+                        y(x) = C_1 e^x + C_2 e^{2x}
+                        \]
+                        onde \( C_1 \) e \( C_2 \) são constantes determinadas pelas condições iniciais ou de contorno.
+
+                        <h4>Conclusão:</h4>
+                        <p>O método de operadores anuladores é uma técnica poderosa para resolver equações diferenciais,
+                            especialmente quando lidamos com equações lineares de ordem superior. Ao usar operadores
+                            diferenciais que anulam certas funções, podemos simplificar o processo de resolução e obter
+                            as soluções de maneira mais eficiente.</p>
+                    </div>
+                </div>
+
+                <!-- 3.7.1 -->
+                <div class="method-card" id="second-order-3-7-1">
+                    <h3>3.7.1 Operadores Diferenciais</h3>
+                    <div class="step-by-step">
+                        <p>Os operadores diferenciais são ferramentas matemáticas que representam as derivadas de uma
+                            função. Eles são usados para facilitar a manipulação algébrica das equações diferenciais,
+                            permitindo que as equações sejam expressas de forma mais compacta e as operações sejam
+                            realizadas de maneira mais eficiente. Em vez de escrever explicitamente as derivadas de uma
+                            função, podemos usar notações de operadores diferenciais para representar essas operações de
+                            forma concisa.</p>
+
+                        <h4>Definição de Operadores Diferenciais:</h4>
+                        <p>Um operador diferencial é uma expressão que representa uma derivada em relação a uma variável
+                            independente. O operador mais simples é o operador de derivada \( D \), que é definido como:
+                        </p>
+                        \[
+                        D = \frac{d}{dx}
+                        \]
+                        Onde \( D \) é o operador diferencial, que representa a derivada de uma função \( y(x) \) em
+                        relação a \( x \). Assim, ao aplicar \( D \) a uma função \( y(x) \), obtemos a primeira
+                        derivada dessa função:</p>
+                        \[
+                        D \cdot y(x) = \frac{dy}{dx}
+                        \]
+
+                        <h4>Operadores Diferenciais de Ordem Superior:</h4>
+                        <p>Além do operador de primeira ordem \( D \), podemos definir operadores de ordem superior. Por
+                            exemplo, o operador \( D^2 \) representa a segunda derivada, ou seja:</p>
+                        \[
+                        D^2 = \frac{d^2}{dx^2}
+                        \]
+                        E ao aplicar \( D^2 \) à função \( y(x) \), obtemos a segunda derivada de \( y \) em relação a
+                        \( x \):
+                        \[
+                        D^2 \cdot y(x) = \frac{d^2y}{dx^2}
+                        \]
+
+                        <h4>Operadores Lineares:</h4>
+                        <p>Em equações diferenciais lineares, os operadores diferenciais são usados para construir a
+                            equação diferencial de forma compacta. Por exemplo, uma equação diferencial de segunda ordem
+                            pode ser escrita como:</p>
+                        \[
+                        D^2 y + p(x) D y + q(x) y = r(x)
+                        \]
+                        Onde \( D^2 \) é o operador de segunda derivada, \( D \) é o operador de primeira derivada e \(
+                        p(x) \), \( q(x) \), e \( r(x) \) são funções de \( x \). Essa notação permite representar
+                        equações diferenciais de forma mais simples e ajuda na análise algébrica das soluções.
+
+                        <h4>Propriedades dos Operadores Diferenciais:</h4>
+                        <p>Os operadores diferenciais possuem várias propriedades úteis para simplificar as equações
+                            diferenciais. Algumas dessas propriedades incluem:</p>
+                        <ul>
+                            <li><strong>Linearidade:</strong> O operador diferencial é linear, ou seja, pode ser
+                                distribuído sobre somas e multiplicações por constantes.</li>
+                            <li><strong>Comutatividade:</strong> Para funções \( f(x) \) e \( g(x) \), temos que \(
+                                D(f(x) + g(x)) = Df(x) + Dg(x) \), e \( D(cf(x)) = c \cdot Df(x) \), onde \( c \) é uma
+                                constante.</li>
+                            <li><strong>Produto de Operadores:</strong> A multiplicação de operadores diferenciais pode
+                                ser usada para representar operações mais complexas, como derivadas de produtos de
+                                funções.</li>
+                        </ul>
+
+                        <h4>Exemplo de Aplicação de Operadores Diferenciais:</h4>
+                        <p>Considere a equação diferencial:</p>
+                        \[
+                        y'' - 3y' + 2y = 0
+                        \]
+                        Podemos reescrever essa equação usando operadores diferenciais da seguinte forma:</p>
+                        \[
+                        D^2 y - 3D y + 2y = 0
+                        \]
+                        A solução dessa equação pode ser obtida aplicando o operador característico \( D^2 - 3D + 2 \),
+                        o qual nos leva à equação característica. As raízes da equação característica determinam as
+                        soluções da equação diferencial.
+
+                        <h4>Conclusão:</h4>
+                        <p>Os operadores diferenciais são ferramentas poderosas que simplificam a resolução de equações
+                            diferenciais, permitindo representar as derivadas de forma compacta e realizar manipulações
+                            algébricas de maneira eficiente. Eles são essenciais para lidar com equações diferenciais
+                            lineares e são frequentemente usados em métodos como o de operadores anuladores para
+                            encontrar soluções.</p>
+                    </div>
+                </div>
+
+                <!-- 3.7.2 -->
+                <div class="method-card" id="second-order-3-7-2">
+                    <h3>3.7.2 Operadores Anuladores</h3>
+                    <div class="step-by-step">
+                        <p>Os operadores anuladores são operadores diferenciais que, quando aplicados a determinadas
+                            funções, resultam em zero, ou seja, "anulam" essas funções. Eles desempenham um papel
+                            importante na resolução de equações diferenciais, especialmente ao ajudar na identificação
+                            da forma da solução particular de uma equação não homogênea.</p>
+
+                        <h4>Definição de Operadores Anuladores:</h4>
+                        <p>Um operador anulador é um operador diferencial que, ao ser aplicado a uma função \( f(x) \),
+                            resulta em zero:</p>
+                        \[
+                        L(f(x)) = 0
+                        \]
+                        Onde \( L \) é o operador anulador e \( f(x) \) é a função que é anulada. Isso significa que o
+                        operador \( L \) transforma a função \( f(x) \) em zero.</p>
+
+                        <h4>Uso de Operadores Anuladores:</h4>
+                        <p>Os operadores anuladores são usados para simplificar a resolução de equações diferenciais não
+                            homogêneas. Ao aplicar esses operadores à função de solução homogênea, podemos identificar a
+                            forma da solução particular. Em outras palavras, os operadores anuladores permitem
+                            "identificar" e "eliminar" certos termos em uma equação diferencial, auxiliando na
+                            construção da solução particular.</p>
+
+                        <h4>Operadores Anuladores em Equações Diferenciais:</h4>
+                        <p>Se tivermos uma equação diferencial linear não homogênea da forma:</p>
+                        \[
+                        L(y) = r(x)
+                        \]
+                        Onde \( L \) é um operador linear, \( y \) é a solução da equação e \( r(x) \) é o termo não
+                        homogêneo, os operadores anuladores podem ser aplicados tanto à solução homogênea quanto à
+                        solução particular.</p>
+
+                        <h4>Exemplo de Aplicação de Operadores Anuladores:</h4>
+                        <p>Considere a equação diferencial:</p>
+                        \[
+                        y'' + 2y' + y = e^x
+                        \]
+                        O operador característico da equação homogênea associada seria \( L_h = D^2 + 2D + 1 \), onde \(
+                        D \) é o operador diferencial. Aplicando esse operador à função homogênea, obtemos a solução
+                        homogênea \( y_h = C_1 e^{-x} + C_2 e^{-x} \). Agora, para encontrar a solução particular,
+                        aplicamos um operador anulador a \( e^x \), o qual pode ser \( L_p = D^2 + 2D + 1 \) novamente.
+                        </p>
+
+                        <p>Ao aplicar o operador anulador à equação, obtemos a solução particular \( y_p \), e a solução
+                            geral seria a soma de \( y_h \) e \( y_p \), ou seja:</p>
+                        \[
+                        y(x) = y_h + y_p = C_1 e^{-x} + C_2 e^{-x} + y_p
+                        \]
+
+                        <h4>Propriedades dos Operadores Anuladores:</h4>
+                        <ul>
+                            <li><strong>Comutatividade:</strong> Os operadores anuladores podem ser aplicados de forma
+                                independente, ou seja, \( L(f(x) + g(x)) = L(f(x)) + L(g(x)) \), onde \( f(x) \) e \(
+                                g(x) \) são funções que são anuladas pelo operador.</li>
+                            <li><strong>Linearidade:</strong> Os operadores anuladores são lineares, o que significa que
+                                podem ser distribuídos sobre combinações lineares de funções.</li>
+                            <li><strong>Capacidade de "anular" termos:</strong> O principal objetivo dos operadores
+                                anuladores é eliminar os termos da equação diferencial que não são necessários para a
+                                solução, deixando apenas aqueles que são relevantes para encontrar a solução particular.
+                            </li>
+                        </ul>
+
+                        <h4>Conclusão:</h4>
+                        <p>Os operadores anuladores são ferramentas importantes no processo de resolução de equações
+                            diferenciais não homogêneas. Eles permitem "anular" certos termos e facilitam a construção
+                            da solução particular. Ao aplicá-los corretamente, podemos simplificar a resolução e
+                            identificar a forma exata da solução para equações diferenciais com termos não homogêneos.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 3.7.3 -->
+                <div class="method-card" id="second-order-3-7-3">
+                    <h3>3.7.3 Resolução por Anuladores</h3>
+                    <div class="step-by-step">
+                        <p>A resolução por anuladores é um método utilizado para resolver equações diferenciais de forma
+                            eficiente, especialmente quando há termos não homogêneos. O processo envolve a aplicação de
+                            operadores anuladores, que reduzem a equação a uma forma de ordem inferior, tornando-a mais
+                            simples de resolver. A solução final da equação é obtida combinando a solução homogênea com
+                            a solução particular encontrada pelo método dos anuladores.</p>
+
+                        <h4>Passo a Passo - Resolução por Anuladores:</h4>
+                        <p>O processo de resolução por anuladores pode ser seguido em três etapas principais:</p>
+
+                        <h5>Passo 1: Identificar o Operador Anulador</h5>
+                        <p>O primeiro passo consiste em identificar o operador anulador apropriado para a equação
+                            diferencial. Este operador é geralmente baseado na forma da equação e pode ser derivado das
+                            raízes da equação característica ou dos coeficientes da equação.</p>
+                        <p>Por exemplo, se a equação diferencial não homogênea tiver o termo \( e^{mx} \), o operador
+                            anulador pode ser expresso como \( D - m \), onde \( D \) é o operador diferencial (isto é,
+                            \( D = \frac{d}{dx} \)).</p>
+
+                        <h5>Passo 2: Aplicar o Operador Anulador à Equação</h5>
+                        <p>Uma vez identificado o operador anulador, ele é aplicado à equação diferencial original. O
+                            objetivo é reduzir a equação a uma forma mais simples, com uma ordem inferior à original.
+                            Isso permite resolver a equação de forma mais eficiente e identificar a forma da solução
+                            particular.</p>
+                        <p>Após aplicar o operador anulador à equação não homogênea, obtemos uma equação mais simples
+                            (geralmente de ordem inferior), que pode ser resolvida utilizando técnicas padrão, como a
+                            solução de equações lineares de primeira ou segunda ordem.</p>
+
+                        <h5>Passo 3: Combinar a Solução Homogênea com a Solução Particular</h5>
+                        <p>Após resolver a equação reduzida obtida pela aplicação do operador anulador, encontramos a
+                            solução particular. Essa solução particular é então combinada com a solução homogênea da
+                            equação original, que é encontrada pela solução da parte homogênea da equação.</p>
+                        <p>A solução homogênea pode ser obtida utilizando o método padrão de resolução de equações
+                            diferenciais lineares, como a equação característica. A solução geral será dada pela soma da
+                            solução homogênea com a solução particular encontrada no passo anterior.</p>
+
+                        <h4>Exemplo de Aplicação do Método de Anuladores:</h4>
+                        <p>Considere a equação diferencial:</p>
+                        \[
+                        y'' - 3y' + 2y = e^x
+                        \]
+                        Para resolver essa equação por anuladores, seguimos os seguintes passos:</p>
+
+                        <h5>1. Identificar o Operador Anulador:</h5>
+                        O operador anulador correspondente ao termo \( e^x \) é \( D - 1 \), onde \( D \) representa a
+                        derivada em relação a \(x\).
+
+                        <h5>2. Aplicar o Operador Anulador:</h5>
+                        Aplicando o operador \( D - 1 \) à equação original, obtemos uma equação reduzida de ordem
+                        inferior. Essa equação pode ser resolvida diretamente.</p>
+
+                        <h5>3. Combinar a Solução Homogênea e Particular:</h5>
+                        A solução homogênea da equação \( y'' - 3y' + 2y = 0 \) pode ser obtida resolvendo a equação
+                        característica associada, o que leva à solução homogênea \( y_h = C_1 e^x + C_2 e^{2x} \). A
+                        solução particular, encontrada pela aplicação do operador anulador, será \( y_p = A e^x \), onde
+                        \( A \) é uma constante a ser determinada.</p>
+                        <p>Finalmente, a solução geral da equação será dada por:</p>
+                        \[
+                        y(x) = y_h + y_p = C_1 e^x + C_2 e^{2x} + A e^x
+                        \]
+
+                        <h4>Conclusão:</h4>
+                        <p>A resolução por anuladores é uma técnica poderosa para resolver equações diferenciais não
+                            homogêneas. Ao identificar o operador anulador apropriado, podemos transformar a equação
+                            original em uma forma mais simples, reduzindo a ordem da equação e tornando a solução mais
+                            fácil de encontrar. A combinação da solução homogênea com a solução particular nos fornece a
+                            solução geral da equação diferencial.</p>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Seção 4: Sistemas de EDOs -->
+            <section id="systems">
+                <h2>4. Sistemas de Equações Diferenciais Ordinárias</h2>
+
+                <!-- 4.1 -->
+                <div class="method-card" id="systems-4-1">
+                    <h3>4.1 Sistemas de EDOs – Resolução pelo Método dos Operadores</h3>
+                    <div class="step-by-step">
+                        <p>O método dos operadores é utilizado para resolver sistemas de equações diferenciais lineares.
+                            A ideia central desse método é aplicar operadores diferenciais para transformar o sistema de
+                            EDOs em equações independentes, simplificando a resolução do sistema. Esse processo permite
+                            tratar cada equação de forma separada, facilitando a obtenção das soluções de maneira
+                            sistemática.</p>
+
+                        <h4>Passo a Passo - Resolução de Sistemas de EDOs:</h4>
+                        <p>Para resolver um sistema de EDOs usando operadores diferenciais, seguimos os seguintes
+                            passos:</p>
+
+                        <h5>Passo 1: Escrever o Sistema de EDOs</h5>
+                        <p>O primeiro passo é escrever o sistema de equações diferenciais na forma padrão. Considere um
+                            sistema de duas equações diferenciais lineares de primeira ordem:</p>
+                        \[
+                        \frac{dx}{dt} = a_1x + b_1y + f_1(t)
+                        \]
+                        \[
+                        \frac{dy}{dt} = a_2x + b_2y + f_2(t)
+                        \]
+                        onde \( x \) e \( y \) são as incógnitas do sistema, \( a_1, a_2, b_1, b_2 \) são coeficientes
+                        constantes e \( f_1(t) \), \( f_2(t) \) são funções de \( t \).
+
+                        <h5>Passo 2: Aplicar Operadores Diferenciais</h5>
+                        <p>O próximo passo é aplicar operadores diferenciais ao sistema. Os operadores diferenciais \( D
+                            \) (onde \( D = \frac{d}{dt} \)) são aplicados para transformar o sistema original em uma
+                            forma que permita tratar cada equação separadamente.</p>
+                        <p>Por exemplo, podemos representar o sistema acima usando o operador \( D \) para obter:</p>
+                        \[
+                        D\mathbf{x} = A\mathbf{x} + \mathbf{f}(t)
+                        \]
+                        onde \( \mathbf{x} = \begin{pmatrix} x(t) \\ y(t) \end{pmatrix} \) e \( A \) é a matriz de
+                        coeficientes do sistema. A equação resultante é uma equação vetorial de primeira ordem.</p>
+
+                        <h5>Passo 3: Diagonalizar a Matriz de Coeficientes</h5>
+                        <p>Em seguida, aplicamos o conceito de diagonalização da matriz de coeficientes \( A \) para
+                            separar as equações. Esse processo envolve encontrar os autovalores e autovetores de \( A
+                            \), permitindo escrever o sistema como um conjunto de equações independentes. Isso
+                            simplifica a resolução do sistema.</p>
+                        <p>Por exemplo, se a matriz \( A \) tem autovalores \( \lambda_1 \) e \( \lambda_2 \), o sistema
+                            pode ser transformado em duas equações de primeira ordem decopladas:</p>
+                        \[
+                        \frac{d}{dt} \mathbf{z}_1 = \lambda_1 \mathbf{z}_1 + g_1(t)
+                        \]
+                        \[
+                        \frac{d}{dt} \mathbf{z}_2 = \lambda_2 \mathbf{z}_2 + g_2(t)
+                        \]
+                        onde \( \mathbf{z}_1 \) e \( \mathbf{z}_2 \) são novos vetores de incógnitas, \( g_1(t) \) e \(
+                        g_2(t) \) são termos resultantes da transformação.</p>
+
+                        <h5>Passo 4: Resolver as Equações Independentes</h5>
+                        <p>Agora que o sistema foi transformado em um conjunto de equações independentes, cada equação
+                            pode ser resolvida separadamente usando métodos padrão de resolução de EDOs, como o método
+                            da variação dos parâmetros ou o método dos coeficientes indeterminados, dependendo da
+                            natureza dos termos \( g_1(t) \) e \( g_2(t) \).</p>
+
+                        <h5>Passo 5: Combinar as Soluções</h5>
+                        <p>Após resolver cada equação separadamente, as soluções individuais são combinadas para formar
+                            a solução geral do sistema original. Isso pode envolver a aplicação de condições iniciais ou
+                            de contorno para determinar as constantes de integração.</p>
+
+                        <h4>Exemplo de Aplicação do Método dos Operadores:</h4>
+                        <p>Considere o seguinte sistema de equações diferenciais lineares de primeira ordem:</p>
+                        \[
+                        \frac{dx}{dt} = 3x + 2y + t
+                        \]
+                        \[
+                        \frac{dy}{dt} = -x + 4y + e^t
+                        \]
+                        A matriz de coeficientes do sistema é dada por:</p>
+                        \[
+                        A = \begin{pmatrix} 3 & 2 \\ -1 & 4 \end{pmatrix}
+                        \]
+                        Aplicando o operador \( D \) ao sistema, obtemos a equação vetorial \( D\mathbf{x} = A\mathbf{x}
+                        + \mathbf{f}(t) \). Podemos diagonalizar a matriz \( A \) para obter duas equações independentes
+                        e resolvê-las separadamente.</p>
+
+                        <h4>Conclusão:</h4>
+                        <p>O método dos operadores é uma ferramenta poderosa para resolver sistemas de equações
+                            diferenciais lineares. Ele permite transformar um sistema acoplado em equações
+                            independentes, facilitando a resolução. Esse método é útil em muitos contextos aplicados,
+                            como em física, engenharia e modelagem de sistemas dinâmicos.</p>
+                    </div>
+                </div>
+
+                <!-- 4.2 -->
+                <div class="method-card" id="systems-4-2">
+                    <h3>4.2 Sistemas de EDOs – Resolução por Álgebra de Matrizes</h3>
+                    <div class="step-by-step">
+                        <p>Para resolver sistemas lineares de equações diferenciais, a álgebra matricial é uma
+                            ferramenta essencial. O uso de autovalores e autovetores permite simplificar o processo de
+                            resolução, especialmente quando lidamos com sistemas de equações diferenciais ordinárias
+                            (EDOs) que podem ser representados de forma matricial. Este método é particularmente útil
+                            quando a matriz dos coeficientes é constante e o sistema é homogêneo.</p>
+
+                        <p>Neste capítulo, abordaremos como usar a álgebra de matrizes, incluindo a resolução de
+                            sistemas de EDOs usando autovalores e autovetores, com exemplos que incluem sistemas \(2
+                            \times 2\) e \(3 \times 3\). Vamos começar explorando os conceitos fundamentais de matrizes
+                            e autovalores.</p>
+
+                        <h4>4.2.1 Teoria Preliminar</h4>
+                        <p>Antes de resolver um sistema de equações diferenciais utilizando matrizes, precisamos
+                            entender alguns conceitos fundamentais de álgebra linear:</p>
+                        <ul>
+                            <li><strong>Autovalores (\( \lambda \)):</strong> São os valores que satisfazem a equação
+                                característica \( \det(A - \lambda I) = 0 \), onde \( A \) é a matriz dos coeficientes e
+                                \( I \) é a matriz identidade.</li>
+                            <li><strong>Autovetores (\( \mathbf{v} \)):</strong> São os vetores não-nulos que satisfazem
+                                \( (A - \lambda I)\mathbf{v} = 0 \), ou seja, eles não mudam de direção sob a
+                                transformação definida pela matriz \( A \), apenas escalonam.</li>
+                        </ul>
+                        <p>Com esses conceitos, podemos resolver sistemas lineares de EDOs, que podem ser expressos na
+                            forma matricial:</p>
+                        \[
+                        \frac{d\mathbf{x}}{dt} = A\mathbf{x}
+                        \]
+                        Onde \( \mathbf{x}(t) \) é o vetor das incógnitas e \( A \) é a matriz dos coeficientes
+                        constantes.</p>
+
+                        <h4>4.2.2 Vetor Solução de um Sistema</h4>
+                        <p>Para resolver um sistema de EDOs, a solução é expressa em termos de autovetores e
+                            autovalores. A solução geral de um sistema homogêneo com coeficientes constantes é dada por
+                            uma combinação linear de exponenciais, cujos expoentes são os autovalores da matriz dos
+                            coeficientes e as constantes multiplicadoras são os autovetores correspondentes.</p>
+
+                        <p>Se a matriz \( A \) de um sistema de equações diferenciais é diagonalizável, a solução será
+                            dada por:</p>
+                        \[
+                        \mathbf{x}(t) = c_1 e^{\lambda_1 t} \mathbf{v_1} + c_2 e^{\lambda_2 t} \mathbf{v_2} + \dots +
+                        c_n e^{\lambda_n t} \mathbf{v_n}
+                        \]
+                        onde \( c_1, c_2, \dots, c_n \) são constantes determinadas pelas condições iniciais do sistema.
+                        </p>
+
+                        <h4>4.2.3 Sistemas Homogêneos com Coeficientes Constantes</h4>
+                        <p>Em sistemas homogêneos com coeficientes constantes, os termos independentes são nulos, e as
+                            soluções podem ser obtidas diretamente a partir dos autovalores e autovetores. O
+                            comportamento das soluções será determinado pelos autovalores da matriz \( A \).</p>
+
+                        <h5>Exemplo de Sistema \( 2 \times 2 \):</h5>
+                        Consideremos o sistema de EDOs homogêneo com coeficientes constantes:</p>
+                        \[
+                        \frac{dx_1}{dt} = 3x_1 + 2x_2
+                        \]
+                        \[
+                        \frac{dx_2}{dt} = -x_1 + 4x_2
+                        \]
+                        A matriz \( A \) é dada por:
+                        \[
+                        A = \begin{pmatrix} 3 & 2 \\ -1 & 4 \end{pmatrix}
+                        \]
+                        Como vimos anteriormente, para resolver esse sistema, precisamos encontrar os autovalores e
+                        autovetores da matriz \( A \). A equação característica é dada por:
+                        \[
+                        \det(A - \lambda I) = 0 \quad \Rightarrow \quad \det \begin{pmatrix} 3 - \lambda & 2 \\ -1 & 4 -
+                        \lambda \end{pmatrix} = 0
+                        \]
+                        Resolvendo a equação, encontramos os autovalores \( \lambda_1 = 1 \) e \( \lambda_2 = 6 \). Os
+                        autovetores associados podem ser encontrados substituindo \( \lambda_1 \) e \( \lambda_2 \) na
+                        equação \( (A - \lambda I)\mathbf{v} = 0 \).</p>
+
+                        <h4>4.2.4 Autovalores e Autovetores</h4>
+                        Agora que entendemos o conceito de autovalores e autovetores, vamos aplicá-los a um sistema \( 3
+                        \times 3 \) para ilustrar como esses conceitos se aplicam em sistemas de maior dimensão.</p>
+
+                        <h5>Exemplo de Sistema \( 3 \times 3 \):</h5>
+                        Considere o sistema de EDOs com a matriz dos coeficientes:</p>
+                        \[
+                        A = \begin{pmatrix} 2 & 1 & 0 \\ 0 & 3 & 1 \\ 1 & 0 & 2 \end{pmatrix}
+                        \]
+                        A equação característica é dada por \( \det(A - \lambda I) = 0 \), ou seja:
+                        \[
+                        \det \begin{pmatrix} 2 - \lambda & 1 & 0 \\ 0 & 3 - \lambda & 1 \\ 1 & 0 & 2 - \lambda
+                        \end{pmatrix} = 0
+                        \]
+                        Resolvendo o determinante e a equação característica, encontramos os autovalores \( \lambda_1 =
+                        3 \), \( \lambda_2 = 2 \), e \( \lambda_3 = 2 \). A solução do sistema será dada pela combinação
+                        linear dos autovetores correspondentes a esses autovalores.</p>
+
+                        <h5>Conclusão:</h5>
+                        A resolução de sistemas de EDOs com matrizes envolve a decomposição da matriz de coeficientes em
+                        seus autovalores e autovetores. A solução geral é dada pela combinação linear das exponenciais
+                        dos autovalores multiplicadas pelos autovetores correspondentes. Este método pode ser estendido
+                        para sistemas de maior dimensão, como os sistemas \( 3 \times 3 \) que acabamos de ver.</p>
+                    </div>
+                </div>
+
+                <!-- 4.2.1 -->
+                <div class="method-card" id="systems-4-2-1">
+                    <h3>4.2.1 Teoria Preliminar</h3>
+                    <div class="step-by-step">
+                        <p>Para resolver sistemas de EDOs por álgebra de matrizes, é necessário entender conceitos
+                            fundamentais de álgebra linear, como matrizes, determinantes e transformações lineares.
+                            Esses conceitos formam a base para representar e manipular sistemas de equações diferenciais
+                            lineares de maneira eficiente.</p>
+
+                        <h4>Matrizes:</h4>
+                        <p>Uma matriz é uma tabela de números organizada em linhas e colunas. Para um sistema de EDOs,
+                            as matrizes são usadas para representar os coeficientes das equações diferenciais. A matriz
+                            dos coeficientes de um sistema linear de \( n \) equações com \( n \) incógnitas é chamada
+                            de <strong>matriz de coeficientes</strong>.</p>
+                        <p>Por exemplo, para o sistema:</p>
+                        \[
+                        \frac{dx_1}{dt} = 3x_1 + 2x_2
+                        \]
+                        \[
+                        \frac{dx_2}{dt} = -x_1 + 4x_2
+                        \]
+                        A matriz de coeficientes seria:</p>
+                        \[
+                        A = \begin{pmatrix} 3 & 2 \\ -1 & 4 \end{pmatrix}
+                        \]
+                        A matriz \( A \) contém os coeficientes das variáveis \( x_1 \) e \( x_2 \) de cada equação.</p>
+
+                        <h4>Determinantes:</h4>
+                        <p>O determinante de uma matriz quadrada \( A \), denotado por \( \text{det}(A) \), é um valor
+                            escalar que fornece informações importantes sobre a matriz. Um determinante igual a zero
+                            indica que a matriz não é invertível, o que significa que o sistema de EDOs pode ser
+                            dependente ou não ter solução única.</p>
+                        <p>Para uma matriz \( 2 \times 2 \), o determinante é dado por:</p>
+                        \[
+                        \text{det}(A) = a_{11}a_{22} - a_{12}a_{21}
+                        \]
+                        Onde \( a_{11}, a_{12}, a_{21}, a_{22} \) são os elementos da matriz. Determinantes são
+                        fundamentais na análise de sistemas lineares, pois indicam se o sistema tem uma solução única
+                        (quando o determinante é diferente de zero) ou se as equações são lineares dependentes (quando o
+                        determinante é zero).</p>
+
+                        <h4>Transformações Lineares:</h4>
+                        <p>Uma transformação linear é uma função entre dois espaços vetoriais que preserva as operações
+                            de adição e multiplicação por escalar. Em termos de sistemas de EDOs, as transformações
+                            lineares são representadas por matrizes. Cada equação do sistema pode ser vista como uma
+                            transformação linear que age sobre os vetores das incógnitas.</p>
+                        <p>Por exemplo, no sistema de equações acima, a transformação linear aplicada à variável \(
+                            \mathbf{x} = \begin{pmatrix} x_1 \\ x_2 \end{pmatrix} \) é dada pela matriz \( A \), que
+                            mapeia o vetor de incógnitas para as taxas de variação dos componentes do vetor.</p>
+
+                        <h4>Autovalores e Autovetores:</h4>
+                        <p>Os autovalores e autovetores de uma matriz \( A \) são conceitos fundamentais para a solução
+                            de sistemas de EDOs. Os autovalores (\( \lambda \)) e os autovetores (\( \mathbf{v} \)) de
+                            \( A \) satisfazem a equação:</p>
+                        \[
+                        A \mathbf{v} = \lambda \mathbf{v}
+                        \]
+                        Onde \( \lambda \) é um autovalor e \( \mathbf{v} \) é um autovetor correspondente. Esses
+                        autovalores e autovetores permitem resolver o sistema de EDOs, pois a solução do sistema pode
+                        ser expressa em termos de funções exponenciais relacionadas aos autovalores e autovetores.</p>
+
+                        <h4>Conclusão:</h4>
+                        <p>Compreender os conceitos de matrizes, determinantes, transformações lineares e
+                            autovalores/autovetores é essencial para a resolução de sistemas de EDOs. Esses conceitos
+                            fornecem as ferramentas necessárias para decoplar o sistema e encontrar soluções eficientes,
+                            utilizando métodos de álgebra linear. Com essa base teórica, é possível aplicar os métodos
+                            de álgebra de matrizes para resolver sistemas de equações diferenciais lineares de forma
+                            sistemática e precisa.</p>
+                    </div>
+                </div>
+
+                <!-- 4.2.2 -->
+                <div class="method-card" id="systems-4-2-2">
+                    <h3>4.2.2 Vetor Solução de um Sistema</h3>
+                    <div class="step-by-step">
+                        <p>A solução de um sistema de equações diferenciais ordinárias (EDOs) pode ser expressa de forma
+                            vetorial, onde o vetor solução contém as soluções de todas as equações do sistema. Esse
+                            vetor solução é útil para descrever o comportamento conjunto das incógnitas do sistema em
+                            função do tempo ou de outra variável independente.</p>
+
+                        <h4>Forma Geral de um Sistema de EDOs:</h4>
+                        <p>Considere um sistema de \( n \) equações diferenciais lineares de primeira ordem, onde cada
+                            equação tem a forma:</p>
+                        \[
+                        \frac{d\mathbf{x}}{dt} = A \mathbf{x} + \mathbf{b}(t)
+                        \]
+                        onde \( \mathbf{x} = \begin{pmatrix} x_1(t) \\ x_2(t) \\ \vdots \\ x_n(t) \end{pmatrix} \) é o
+                        vetor incógnita, \( A \) é a matriz dos coeficientes, e \( \mathbf{b}(t) \) é o vetor de termos
+                        não homogêneos (se houver).</p>
+
+                        <p>Ao resolver esse sistema, obtemos uma solução vetorial \( \mathbf{x}(t) \), que é composta
+                            pelas soluções \( x_1(t), x_2(t), \dots, x_n(t) \) das equações individuais do sistema.</p>
+
+                        <h4>Solução Homogênea:</h4>
+                        <p>Para o caso homogêneo \( \mathbf{b}(t) = 0 \), a solução geral pode ser expressa como uma
+                            combinação linear dos autovetores de \( A \), com os autovalores correspondentes, da
+                            seguinte forma:</p>
+                        \[
+                        \mathbf{x}(t) = c_1 e^{\lambda_1 t} \mathbf{v_1} + c_2 e^{\lambda_2 t} \mathbf{v_2} + \dots +
+                        c_n e^{\lambda_n t} \mathbf{v_n}
+                        \]
+                        onde \( \lambda_i \) são os autovalores e \( \mathbf{v_i} \) são os autovetores correspondentes,
+                        e \( c_1, c_2, \dots, c_n \) são constantes determinadas pelas condições iniciais.</p>
+
+                        <h4>Solução Particular:</h4>
+                        <p>No caso não homogêneo, onde \( \mathbf{b}(t) \neq 0 \), a solução total é dada pela soma da
+                            solução homogênea e da solução particular \( \mathbf{x}_p(t) \), que é obtida por métodos
+                            como a variação dos parâmetros ou o método dos coeficientes indeterminados:</p>
+                        \[
+                        \mathbf{x}(t) = \mathbf{x}_h(t) + \mathbf{x}_p(t)
+                        \]
+                        A solução particular \( \mathbf{x}_p(t) \) é encontrada aplicando os métodos adequados para cada
+                        tipo de \( \mathbf{b}(t) \).</p>
+
+                        <h4>Exemplo de Sistema de EDOs:</h4>
+                        <p>Considere o seguinte sistema de equações diferenciais de duas variáveis:</p>
+                        \[
+                        \frac{dx_1}{dt} = 3x_1 + 2x_2
+                        \]
+                        \[
+                        \frac{dx_2}{dt} = -x_1 + 4x_2
+                        \]
+                        A solução do sistema é dada pelo vetor \( \mathbf{x}(t) = \begin{pmatrix} x_1(t) \\ x_2(t)
+                        \end{pmatrix} \), onde \( x_1(t) \) e \( x_2(t) \) são as soluções das equações individuais. A
+                        solução do sistema pode ser escrita como uma combinação linear dos autovetores associados aos
+                        autovalores da matriz dos coeficientes \( A = \begin{pmatrix} 3 & 2 \\ -1 & 4 \end{pmatrix} \).
+                        </p>
+
+                        <h4>Conclusão:</h4>
+                        <p>Ao resolver um sistema de EDOs, a solução é expressa em forma vetorial, onde cada componente
+                            do vetor é a solução de uma equação do sistema. A solução geral é composta pela soma da
+                            solução homogênea e da solução particular. Este formato vetorial facilita a visualização e
+                            análise do comportamento dinâmico do sistema como um todo, além de ser fundamental para
+                            sistemas mais complexos, com múltiplas equações e incógnitas.</p>
+                    </div>
+                </div>
+
+                <!-- 4.2.3 -->
+                <div class="method-card" id="systems-4-2-3">
+                    <h3>4.2.3 Sistemas Homogêneos com Coeficientes Constantes</h3>
+                    <div class="step-by-step">
+                        <p>Em sistemas homogêneos, os termos independentes são nulos e os coeficientes das equações são
+                            constantes. Esse tipo de sistema permite a aplicação dos métodos matriciais e das soluções
+                            baseadas em autovalores e autovetores, o que facilita a resolução do sistema de equações
+                            diferenciais ordinárias (EDOs).</p>
+
+                        <h4>Forma Geral de um Sistema Homogêneo:</h4>
+                        <p>Considere o seguinte sistema de equações diferenciais de primeira ordem:</p>
+                        \[
+                        \frac{d\mathbf{x}}{dt} = A \mathbf{x}
+                        \]
+                        onde \( \mathbf{x} = \begin{pmatrix} x_1(t) \\ x_2(t) \\ \vdots \\ x_n(t) \end{pmatrix} \) é o
+                        vetor incógnita, e \( A \) é a matriz dos coeficientes constantes, que é uma matriz \( n \times
+                        n \). Neste caso, não há termos independentes, ou seja, o vetor \( \mathbf{b}(t) \) é zero.</p>
+
+                        <h4>Solução Geral:</h4>
+                        <p>A solução desse tipo de sistema é obtida a partir dos autovalores e autovetores da matriz \(
+                            A \). Supondo que a matriz \( A \) tenha \( n \) autovalores \( \lambda_1, \lambda_2, \dots,
+                            \lambda_n \) e seus respectivos autovetores \( \mathbf{v_1}, \mathbf{v_2}, \dots,
+                            \mathbf{v_n} \), a solução geral é dada pela combinação linear dos termos da forma:</p>
+                        \[
+                        \mathbf{x}(t) = c_1 e^{\lambda_1 t} \mathbf{v_1} + c_2 e^{\lambda_2 t} \mathbf{v_2} + \dots +
+                        c_n e^{\lambda_n t} \mathbf{v_n}
+                        \]
+                        onde \( c_1, c_2, \dots, c_n \) são constantes determinadas pelas condições iniciais do sistema.
+                        </p>
+
+                        <h4>Exemplo:</h4>
+                        <p>Considere o sistema de EDOs homogêneo com coeficientes constantes:</p>
+                        \[
+                        \frac{dx_1}{dt} = 3x_1 + 2x_2
+                        \]
+                        \[
+                        \frac{dx_2}{dt} = -x_1 + 4x_2
+                        \]
+                        A matriz dos coeficientes é dada por:
+                        \[
+                        A = \begin{pmatrix} 3 & 2 \\ -1 & 4 \end{pmatrix}
+                        \]
+                        A solução desse sistema pode ser obtida resolvendo o problema característico para a matriz \( A
+                        \), encontrando seus autovalores e autovetores, e expressando a solução como uma combinação
+                        linear desses autovetores com os autovalores correspondentes.</p>
+
+                        <h4>Autovalores e Autovetores:</h4>
+                        A equação característica associada à matriz \( A \) é dada por \( \det(A - \lambda I) = 0 \),
+                        onde \( I \) é a matriz identidade. A solução para \( \lambda \) nos dará os autovalores, e os
+                        autovetores correspondentes podem ser encontrados resolvendo \( (A - \lambda I)\mathbf{v} = 0
+                        \).</p>
+
+                        <h4>Conclusão:</h4>
+                        <p>Em sistemas homogêneos com coeficientes constantes, a solução pode ser expressa como uma
+                            combinação linear de exponenciais, cujos expoentes são os autovalores da matriz de
+                            coeficientes, e as constantes multiplicadoras são os autovetores correspondentes. Esses
+                            sistemas são fundamentais em muitas áreas da matemática aplicada e física, pois muitas vezes
+                            modelam comportamentos dinâmicos que envolvem crescimento ou decaimento exponenciais.</p>
+                    </div>
+                </div>
+
+                <!-- 4.2.4 -->
+                <div class="method-card" id="systems-4-2-4">
+                    <h3>4.2.4 Autovalores e Autovetores</h3>
+                    <div class="step-by-step">
+                        <p>Para resolver sistemas lineares de equações diferenciais, um dos métodos essenciais envolve a
+                            utilização de autovalores e autovetores. O processo começa com a equação característica dada
+                            por \( \det(A - \lambda I) = 0 \), onde \( A \) é a matriz dos coeficientes do sistema, \(
+                            \lambda \) é o autovalor, e \( I \) é a matriz identidade.</p>
+
+                        <h4>Passo 1: Encontrando os Autovalores</h4>
+                        <p>O primeiro passo é calcular a equação característica, que resulta em uma equação polinomial
+                            de grau \( n \) (onde \( n \) é a ordem da matriz \( A \)) para encontrar os autovalores \(
+                            \lambda \).</p>
+                        <p>A equação característica é dada por:</p>
+                        \[
+                        \det(A - \lambda I) = 0
+                        \]
+                        O cálculo do determinante fornece um polinômio cujas raízes são os autovalores \( \lambda_1,
+                        \lambda_2, \dots, \lambda_n \).</p>
+
+                        <h4>Passo 2: Encontrando os Autovetores</h4>
+                        <p>Uma vez que os autovalores são encontrados, os autovetores correspondentes são obtidos
+                            substituindo cada autovalor \( \lambda \) na equação \( (A - \lambda I)\mathbf{v} = 0 \),
+                            onde \( \mathbf{v} \) é o autovetor associado. A solução desse sistema linear dá os
+                            autovetores correspondentes.</p>
+
+                        <h4>Exemplo:</h4>
+                        <p>Considere a matriz \( A \) dada por:</p>
+                        \[
+                        A = \begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix}
+                        \]
+                        Vamos encontrar os autovalores e autovetores dessa matriz.</p>
+
+                        <h5>1. Encontrando os Autovalores</h5>
+                        <p>Começamos calculando a equação característica:</p>
+                        \[
+                        \det(A - \lambda I) = \det \begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix} - \lambda
+                        \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix} = \det \begin{bmatrix} 2-\lambda & 1 \\ 1 &
+                        2-\lambda \end{bmatrix} = 0
+                        \]
+                        O determinante de uma matriz 2x2 é dado por \( \det \begin{bmatrix} a & b \\ c & d \end{bmatrix}
+                        = ad - bc \). Então, temos:
+                        \[
+                        (2 - \lambda)(2 - \lambda) - (1)(1) = 0
+                        \]
+                        Simplificando:
+                        \[
+                        (2 - \lambda)^2 - 1 = 0
+                        \]
+                        \[
+                        (2 - \lambda)^2 = 1
+                        \]
+                        \[
+                        2 - \lambda = \pm 1
+                        \]
+                        Logo, as duas soluções para \( \lambda \) são:
+                        \[
+                        \lambda_1 = 1, \quad \lambda_2 = 3
+                        \]
+
+                        <h5>2. Encontrando os Autovetores</h5>
+                        Agora, vamos encontrar os autovetores correspondentes a cada autovalor, começando com \(
+                        \lambda_1 = 1 \).</p>
+
+                        Substituímos \( \lambda = 1 \) na equação \( (A - \lambda I)\mathbf{v} = 0 \), ou seja:
+                        \[
+                        \left( \begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix} - 1 \begin{bmatrix} 1 & 0 \\ 0 & 1
+                        \end{bmatrix} \right) \begin{bmatrix} v_1 \\ v_2 \end{bmatrix} = \begin{bmatrix} 0 \\ 0
+                        \end{bmatrix}
+                        \]
+                        \[
+                        \begin{bmatrix} 1 & 1 \\ 1 & 1 \end{bmatrix} \begin{bmatrix} v_1 \\ v_2 \end{bmatrix} =
+                        \begin{bmatrix} 0 \\ 0 \end{bmatrix}
+                        \]
+                        Isso nos dá o sistema de equações:
+                        \[
+                        v_1 + v_2 = 0 \quad \text{ou} \quad v_1 = -v_2
+                        \]
+                        Logo, o autovetor correspondente a \( \lambda_1 = 1 \) é:
+                        \[
+                        \mathbf{v_1} = \begin{bmatrix} 1 \\ -1 \end{bmatrix}
+                        \]
+
+                        Agora, substituímos \( \lambda = 3 \) na equação \( (A - \lambda I)\mathbf{v} = 0 \):
+                        \[
+                        \left( \begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix} - 3 \begin{bmatrix} 1 & 0 \\ 0 & 1
+                        \end{bmatrix} \right) \begin{bmatrix} v_1 \\ v_2 \end{bmatrix} = \begin{bmatrix} 0 \\ 0
+                        \end{bmatrix}
+                        \]
+                        \[
+                        \begin{bmatrix} -1 & 1 \\ 1 & -1 \end{bmatrix} \begin{bmatrix} v_1 \\ v_2 \end{bmatrix} =
+                        \begin{bmatrix} 0 \\ 0 \end{bmatrix}
+                        \]
+                        Isso nos dá o sistema de equações:
+                        \[
+                        -v_1 + v_2 = 0 \quad \text{ou} \quad v_1 = v_2
+                        \]
+                        Logo, o autovetor correspondente a \( \lambda_2 = 3 \) é:
+                        \[
+                        \mathbf{v_2} = \begin{bmatrix} 1 \\ 1 \end{bmatrix}
+                        \]
+
+                        <h5>3. Solução Geral</h5>
+                        A solução geral do sistema é dada pela combinação linear dos autovetores, multiplicados pelas
+                        exponenciais dos autovalores correspondentes. Ou seja, a solução do sistema é:
+                        \[
+                        \mathbf{x}(t) = c_1 e^{\lambda_1 t} \mathbf{v_1} + c_2 e^{\lambda_2 t} \mathbf{v_2}
+                        \]
+                        Substituindo os valores que encontramos:
+                        \[
+                        \mathbf{x}(t) = c_1 e^{t} \begin{bmatrix} 1 \\ -1 \end{bmatrix} + c_2 e^{3t} \begin{bmatrix} 1
+                        \\ 1 \end{bmatrix}
+                        \]
+                        Ou seja:
+                        \[
+                        \mathbf{x}(t) = \begin{bmatrix} c_1 e^t + c_2 e^{3t} \\ -c_1 e^t + c_2 e^{3t} \end{bmatrix}
+                        \]
+
+                        <h4>Conclusão:</h4>
+                        <p>Em sistemas homogêneos com coeficientes constantes, a solução pode ser expressa como uma
+                            combinação linear de exponenciais, cujos expoentes são os autovalores da matriz de
+                            coeficientes, e as constantes multiplicadoras são os autovetores correspondentes. Esses
+                            sistemas são fundamentais em muitas áreas da matemática aplicada e física, pois muitas vezes
+                            modelam comportamentos dinâmicos que envolvem crescimento ou decaimento exponenciais.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção 5: Aplicações das EDOs -->
+            <section id="applications">
+                <h2>5. Aplicações das EDOs</h2>
+                <div class="method-card">
+                    <h3>Modelos em Ciências</h3>
+                    <div class="step-by-step">
+                        <p><strong>Crescimento Populacional:</strong> O modelo de Malthus utiliza a EDO \(
+                            \frac{dP}{dt}=kP \) com solução \( P(t)=P_0e^{kt} \).</p>
+                        <p><strong>Oscilações:</strong> Problemas envolvendo pêndulos simples ou circuitos RLC são
+                            modelados por EDOs de segunda ordem para descrever oscilações.</p>
+                    </div>
+                </div>
+                <div class="method-card">
+                    <h3>Aplicações na Engenharia</h3>
+                    <div class="step-by-step">
+                        <p><strong>Circuitos Elétricos:</strong> A análise de circuitos RC, RL e RLC utiliza EDOs para
+                            estudar o comportamento de tensão e corrente.</p>
+                        <p><strong>Deflexão de Vigas:</strong> Problemas estruturais, como a deflexão de vigas, são
+                            modelados por EDOs de segunda ordem.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção 6: Dicas de Estudo -->
+            <section id="dicas">
+                <h2>6. Dicas de Estudo para EDOs</h2>
+                <div class="method-card">
+                    <div class="step-by-step">
+                        <ul>
+                            <li><strong>Entenda a teoria:</strong> Revise os conceitos de cálculo diferencial e
+                                integral.</li>
+                            <li><strong>Pratique:</strong> Resolva exercícios que abrangem desde métodos simples (como
+                                separação de variáveis) até técnicas mais avançadas (variação de parâmetros, redução da
+                                ordem, etc.).</li>
+                            <li><strong>Visualize:</strong> Utilize gráficos e softwares de simulação para compreender o
+                                comportamento das soluções.</li>
+                            <li><strong>Estude exemplos:</strong> Compare a resolução de um mesmo problema por
+                                diferentes métodos.</li>
+                            <li><strong>Discuta:</strong> Participe de grupos de estudo para esclarecer dúvidas e trocar
+                                experiências.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Guia Completo de EDO's. Todos os direitos reservados.</p>
+    </footer>
+</body>
+
+</html>
